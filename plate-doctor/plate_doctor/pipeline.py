@@ -10,7 +10,7 @@ import shutil
 from pathlib import Path
 
 from . import core, media, recover, submit
-from .config import ATTRIBUTION, HDR_RECIPE_NAME, RECIPE_NAME, VERSION
+from .config import ATTRIBUTION, RECIPE_NAME, VERSION
 from .core import Refusal
 
 
@@ -111,7 +111,7 @@ def remove_run(plate: Path, matte: Path, *, location: str | None = None, prompt:
     return manifest
 
 
-def recover_run(plate: Path, *, lane: str = "graph", out: Path, shot: str | None = None, exposure: float = 7.1,
+def recover_run(plate: Path, *, lane: str = "graph", hdr_graph: Path | None = None, out: Path, shot: str | None = None, exposure: float = 7.1,
                 seed: int = 42, go: bool = False, transport: str = "sdk", partner_ok: bool = False, env=None,
                 submit_fn=submit.submit_graph, hosted_fn=recover.hosted_hdr) -> dict:
     """RECOVER: SDR to HDR EXR. lane 'graph' = local LTX-2.3 HDR IC-LoRA (open weights, the default);
@@ -149,12 +149,12 @@ def recover_run(plate: Path, *, lane: str = "graph", out: Path, shot: str | None
         return manifest
     if lane != "graph":
         raise Refusal(f"unknown lane {lane!r} (graph or ltx-api)")
-    api = recover.load_hdr_api_graph()
+    api = recover.load_hdr_api_graph(hdr_graph)
     graph = recover.patch_hdr_graph(api, plate_name=plate.name, fps=float(info["fps"]), exr_dir=f"output/{rd.name}",
                                     exposure=exposure, seed=seed)
     gpath = rd / "hdr_graph.api.json"
     gpath.write_text(json.dumps(graph, indent=1))
-    manifest.update(graph=str(gpath), recipe=HDR_RECIPE_NAME,
+    manifest.update(graph=str(gpath), recipe="ltx23-hdr-iclora (user-fetched upstream workflow)",
                     note=("The graph renders the closest 8n+1 frames of the plate. EXRs are written by "
                           "LTXVHDRDecodePostprocess on the ComfyUI machine under output/<run>/; set "
                           "OPENCV_IO_ENABLE_OPENEXR=1 before launching ComfyUI. UNPROVEN as an API-converted graph."))

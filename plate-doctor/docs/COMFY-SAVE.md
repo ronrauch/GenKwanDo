@@ -6,7 +6,7 @@ documented, and registered. None of that has happened for Plate Doctor. Do it wh
 | Graph | Save as | Source in this repo |
 |---|---|---|
 | REMOVE | `SECRETLAB-LTX25-PlateDoctor-v001` | `graphs/ltx25-cleanplate.api.json` |
-| RECOVER | `SECRETLAB-LTX23-HDR-ICLoRA-local-v001` | `graphs/ltx23-hdr-iclora.ui.json` (or the API conversion written to a run folder) |
+| RECOVER | not saved | derived from Lightricks' workflow under the LTX-2 Community License: check those terms before saving a derivative anywhere |
 
 Steps (later, via the lab's `secretlab_save.py`, then `save_workflow(workflow_path=...)`):
 1. Build save-format JSON from the API graph with both documentation notes on the canvas. Saving an API graph inline

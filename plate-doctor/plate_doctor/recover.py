@@ -1,7 +1,8 @@
 """RECOVER: SDR plate to a gradeable HDR EXR sequence.
 
-Primary lane (open weights): the local LTX-2.3 HDR IC-LoRA graph, shipped as graphs/ltx23-hdr-iclora.ui.json (the
-ComfyUI-LTXVideo example flow). `ui_to_api` turns it into an API-format graph, dropping notes and dead branches.
+Primary lane: the local LTX-2.3 HDR IC-LoRA graph. This repo does NOT ship Lightricks' workflow (ComfyUI-LTXVideo is
+under the LTX-2 Community License Agreement): `fetch_graph` copies or downloads the user's own copy into
+graphs/fetched/, and `ui_to_api` converts that copy to API format, dropping notes and dead branches.
 Optional lane (PARTNER SERVICE, not open weights): the hosted api.ltx.video /v2/video-to-video-hdr endpoint.
 
 Everything network-capable here takes an injectable opener so tests never touch the network.
@@ -18,7 +19,12 @@ from pathlib import Path
 
 from .core import GRAPHS, Refusal
 
-HDR_UI_GRAPH = GRAPHS / "ltx23-hdr-iclora.ui.json"
+UPSTREAM_REPO = "https://github.com/Lightricks/ComfyUI-LTXVideo"
+UPSTREAM_GRAPH = "LTX-2.3_ICLoRA_HDR_Distilled.json"        # under the repo's LTX-2.3 example workflows
+FETCHED_DIR = GRAPHS / "fetched"                              # gitignored: never part of this repo
+FETCH_HELP = (f"RECOVER needs Lightricks' HDR workflow, which this repo does not ship (it is under the LTX-2 Community "
+              f"License Agreement). Download {UPSTREAM_GRAPH} from the LTX-2.3 example workflows in {UPSTREAM_REPO}, "
+              "then run:  python3 -m plate_doctor fetch-graph --from /path/to/" + UPSTREAM_GRAPH)
 SKIP_TYPES = {"Note", "MarkdownNote"}
 ROOT_TYPES = {"SaveVideo", "LTXVHDRDecodePostprocess"}      # the nodes that make files; everything else must feed them
 LTX_BASE = "https://api.ltx.video"
@@ -69,12 +75,46 @@ def ui_to_api(ui: dict, roots: set[str] = ROOT_TYPES) -> dict:
     return {k: api[k] for k in sorted(keep, key=int)}
 
 
-def load_hdr_api_graph(path: Path = HDR_UI_GRAPH) -> dict:
-    return ui_to_api(json.loads(Path(path).read_text()))
+def fetched_graph_path() -> Path:
+    return FETCHED_DIR / UPSTREAM_GRAPH
 
 
-def _only(graph: dict, cls: str) -> str:
+def fetch_graph(source: str, dest: Path | None = None, opener=urllib.request.urlopen) -> Path:
+    """Put the user's copy of the upstream HDR workflow where RECOVER reads it. `source` is a local file path or an
+    explicit http(s) URL (the only network call here, and only when you pass a URL). The file must be a ComfyUI
+    save-format graph. Nothing about its content is rewritten."""
+    dest = Path(dest) if dest else fetched_graph_path()
+    if source.startswith(("http://", "https://")):
+        with opener(urllib.request.Request(source), timeout=60) as r:
+            raw = r.read()
+    else:
+        src = Path(source).expanduser()
+        if not src.is_file():
+            raise Refusal(f"{src} does not exist. {FETCH_HELP}")
+        raw = src.read_bytes()
+    try:
+        data = json.loads(raw)
+    except ValueError as exc:
+        raise Refusal(f"that is not JSON ({exc}); a GitHub HTML page will do this. Use the raw file.") from exc
+    if not (isinstance(data, dict) and isinstance(data.get("nodes"), list) and isinstance(data.get("links"), list)):
+        raise Refusal("that JSON is not a ComfyUI save-format workflow (no nodes/links lists)")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(raw)
+    return dest
+
+
+def load_hdr_api_graph(path: Path | None = None) -> dict:
+    """The HDR graph in API format, read from the user's fetched copy (or an explicit path)."""
+    p = Path(path) if path else fetched_graph_path()
+    if not p.is_file():
+        raise Refusal(FETCH_HELP)
+    return ui_to_api(json.loads(p.read_text()))
+
+
+def _only(graph: dict, cls: str, optional: bool = False) -> str | None:
     ids = [k for k, v in graph.items() if v["class_type"] == cls]
+    if optional and not ids:
+        return None
     if len(ids) != 1:
         raise ValueError(f"expected exactly one {cls} in the HDR graph, found {len(ids)}")
     return ids[0]
@@ -87,8 +127,10 @@ def patch_hdr_graph(graph: dict, *, plate_name: str, fps: float, exr_dir: str, e
     g[_only(g, "LoadVideo")]["inputs"]["file"] = plate_name
     dec = g[_only(g, "LTXVHDRDecodePostprocess")]["inputs"]
     dec.update(save_exr=True, output_dir=exr_dir, filename_prefix=exr_prefix, exposure=exposure)
-    g[_only(g, "CreateVideo")]["inputs"]["fps"] = float(fps)
-    g[_only(g, "RandomNoise")]["inputs"]["noise_seed"] = seed
+    if (cv := _only(g, "CreateVideo", optional=True)):
+        g[cv]["inputs"]["fps"] = float(fps)
+    if (rn := _only(g, "RandomNoise", optional=True)):
+        g[rn]["inputs"]["noise_seed"] = seed
     return g
 
 

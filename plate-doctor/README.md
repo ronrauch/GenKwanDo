@@ -55,13 +55,31 @@ The SDK path follows the public docs (`client.workflows.from_file`, `wf.set_inpu
 
 | Tab | Engine | Open weights? | State |
 |---|---|---|---|
-| REMOVE | LTX-2.5 22B distilled + the LTX-2.3 in/outpainting IC-LoRA, driven by your matte | yes | graph = a lab recipe proven on Comfy Cloud on a 9-frame probe; this app's wrapper around it is untested live |
-| RECOVER (default lane) | LTX-2.3 HDR IC-LoRA, local ComfyUI graph | yes | the upstream flow is a working example; the API-format conversion here is **unproven** |
+| REMOVE | LTX-2.5 22B distilled + the LTX-2.3 in/outpainting IC-LoRA, driven by your matte | weights downloadable; see licence note | graph = our own Secret Lab recipe (`SECRETLAB-LTX25-CleanPlate-v001`), proven on Comfy Cloud on a 9-frame probe; this app's wrapper around it is untested live |
+| RECOVER (default lane) | LTX-2.3 HDR IC-LoRA, local ComfyUI graph from your own copy of Lightricks' workflow | weights downloadable; see licence note | API-format conversion is **unproven** |
 | RECOVER (`--lane ltx-api`) | hosted `api.ltx.video` HDR endpoint | **no, partner service** | needs `--partner-service-ok`, `LTX_API_KEY`, `--go`; untested |
 | DIRECT | LTX IC-LoRA water-sim + motion-track | yes | scaffold only, see `docs/DIRECT.md` |
 
 For an **Open Weights Only** category, use REMOVE and the RECOVER `graph` lane on local ComfyUI or your own pod: no
 partner nodes, no hosted API.
+
+## Licences
+
+Plate Doctor is MIT. **Using LTX models is governed by the LTX-2 Community License Agreement**: see
+[Lightricks/ComfyUI-LTXVideo](https://github.com/Lightricks/ComfyUI-LTXVideo) and the model pages, and read it before you
+use or distribute anything made with them. This repo does not include Lightricks' workflows.
+
+## RECOVER setup (one step)
+
+RECOVER reads *your* copy of Lightricks' HDR workflow. Download `LTX-2.3_ICLoRA_HDR_Distilled.json` from the LTX-2.3
+example workflows in the ComfyUI-LTXVideo repo, then:
+
+```bash
+python3 -m plate_doctor fetch-graph --from /path/to/LTX-2.3_ICLoRA_HDR_Distilled.json   # copies it to graphs/fetched/ (gitignored)
+python3 -m plate_doctor recover plate.mp4                                              # dry run
+```
+
+`fetch-graph --from https://...raw URL` also works and is the only command here that fetches anything.
 
 ## Rules the code enforces (each one cost somebody a bad render)
 

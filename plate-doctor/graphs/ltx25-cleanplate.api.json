@@ -411,7 +411,8 @@
    "engine": "LTX-2.5 22B distilled int8-convrot + ltx-2.3-22b-ic-lora-in-outpainting-0.9 (gemma4-12b int8-convrot, LTX-2.5 bf16 video + audio VAEs)",
    "status": "candidate",
    "wiring_law": "node 54 takes positive/negative from node 53 LTXVSetAudioRefTokens, NOT from node 42 (contradicts the vendor example; bypassing it hallucinated a person into the empty set). Node 90 image_b = node 50.",
-   "note": "extra is not a node: Plate Doctor submits only the nodes."
+   "note": "extra is not a node: Plate Doctor submits only the nodes.",
+   "provenance": "Original Secret Lab recipe (SECRETLAB-LTX25-CleanPlate-v001), authored in-house and proven on Comfy Cloud on a 9-frame probe. It is not a vendor example and not copied from Lightricks' workflows; it differs from the vendor example at node 54. It loads LTX models that are governed by the LTX-2 Community License Agreement."
   }
  }
 }

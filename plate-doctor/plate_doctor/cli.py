@@ -6,7 +6,7 @@ import json
 import sys
 from pathlib import Path
 
-from . import core, media, pipeline
+from . import core, media, pipeline, recover
 from .config import APP_NAME, VERSION, about_text
 from .core import Refusal
 
@@ -55,10 +55,14 @@ def build_parser() -> argparse.ArgumentParser:
     c = sub.add_parser("recover", help="RECOVER: SDR to HDR EXR (dry run unless --go)")
     c.add_argument("plate"); c.add_argument("--lane", choices=["graph", "ltx-api"], default="graph",
                    help="graph = local LTX-2.3 HDR IC-LoRA (open weights); ltx-api = hosted PARTNER SERVICE")
+    c.add_argument("--graph", help="path to your copy of the upstream HDR workflow (default: the fetch-graph copy)")
     c.add_argument("--exposure", type=float, default=7.1); c.add_argument("--seed", type=int, default=42)
     c.add_argument("--shot"); c.add_argument("--out", default="workspace/runs")
     c.add_argument("--go", action="store_true"); c.add_argument("--transport", choices=["sdk", "http"], default="sdk")
     c.add_argument("--partner-service-ok", action="store_true", help="confirm use of the hosted partner service")
+
+    g = sub.add_parser("fetch-graph", help="put your copy of Lightricks' HDR workflow where RECOVER reads it")
+    g.add_argument("--from", dest="src", help="path to the downloaded workflow, or an explicit https URL to the raw file")
 
     f = sub.add_parser("reflect", help="add a glossy surface's reflection to a matte (needs numpy)")
     f.add_argument("plate"); f.add_argument("matte"); f.add_argument("--out", required=True)
@@ -90,9 +94,15 @@ def main(argv: list[str] | None = None) -> int:
                 frames=args.frames, probe=args.probe, probe_at=args.probe_at, seed=args.seed, dilation=args.dilation,
                 shot=args.shot, out=Path(args.out), silent_audio=args.silent_audio, go=args.go, transport=args.transport))
         elif args.cmd == "recover":
-            _print_plan(pipeline.recover_run(Path(args.plate), lane=args.lane, out=Path(args.out), shot=args.shot,
+            _print_plan(pipeline.recover_run(Path(args.plate), lane=args.lane, hdr_graph=Path(args.graph) if args.graph else None,
+                                             out=Path(args.out), shot=args.shot,
                                              exposure=args.exposure, seed=args.seed, go=args.go,
                                              transport=args.transport, partner_ok=args.partner_service_ok))
+        elif args.cmd == "fetch-graph":
+            if not args.src:
+                print(recover.FETCH_HELP)
+                return 2
+            print(f"saved {recover.fetch_graph(args.src)}")
         elif args.cmd == "reflect":
             info = media.probe_media(Path(args.plate))
             frames = media.mirror_reflection(media.read_matte(Path(args.matte), info["width"], info["height"]),

@@ -12,7 +12,6 @@ ATTRIBUTION = "TODO: credit line, decided at ship"
 
 # Runtime defaults. Nothing here spends money: every network path is gated in submit.py.
 RECIPE_NAME = "SECRETLAB-LTX25-CleanPlate-v001"      # lab workflow id (naming convention), not a credit line
-HDR_RECIPE_NAME = "SECRETLAB-LTX23-HDR-ICLoRA-local-v001"
 
 
 def about_text() -> str:

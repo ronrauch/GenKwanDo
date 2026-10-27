@@ -12,23 +12,23 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from plate_doctor import recover, submit  # noqa: E402
 from plate_doctor.core import Refusal  # noqa: E402
+from tests.fixtures import hdr_like_ui_graph  # noqa: E402
 
 
 class UiToApi(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.ui = json.loads(recover.HDR_UI_GRAPH.read_text())
-        cls.api = recover.load_hdr_api_graph()
+        cls.ui = hdr_like_ui_graph()
+        cls.api = recover.ui_to_api(cls.ui)
 
-    def test_notes_and_dead_branches_are_dropped(self):
+    def test_notes_muted_nodes_and_dead_branches_are_dropped(self):
         classes = {v["class_type"] for v in self.api.values()}
-        self.assertNotIn("Note", classes)
-        self.assertNotIn("GemmaAPITextEncode", classes)        # the unused API-key encoders never feed an output
-        self.assertNotIn("PrimitiveString", classes)
-        self.assertIn("LTXVHDRDecodePostprocess", classes)
-        self.assertIn("SaveVideo", classes)
+        for gone in ("Note", "MutedThing", "GemmaAPITextEncode", "PrimitiveString"):
+            self.assertNotIn(gone, classes)
+        self.assertEqual(classes, {"LoadVideo", "GetVideoComponents", "GetImageSize", "EmptyLTXVLatentVideo",
+                                   "LTXVHDRDecodePostprocess", "CreateVideo", "SaveVideo"})
 
-    def test_every_link_points_at_a_surviving_node_and_slot(self):
+    def test_every_link_points_at_a_surviving_node(self):
         for nid, node in self.api.items():
             for name, v in node["inputs"].items():
                 if isinstance(v, list):
@@ -36,16 +36,17 @@ class UiToApi(unittest.TestCase):
 
     def test_widgets_land_on_the_right_inputs(self):
         by_cls = {v["class_type"]: v["inputs"] for v in self.api.values()}
-        self.assertEqual(by_cls["RandomNoise"]["noise_seed"], 42)
         self.assertEqual(by_cls["LTXVHDRDecodePostprocess"]["exposure"], 7.1)
         self.assertEqual(by_cls["LTXVHDRDecodePostprocess"]["save_exr"], True)
-        self.assertEqual(by_cls["CFGGuider"]["cfg"], 1)
+        self.assertEqual(by_cls["LTXVHDRDecodePostprocess"]["output_dir"], "output/old")
+        self.assertEqual(by_cls["SaveVideo"]["codec"], "auto")
+        self.assertEqual(by_cls["LoadVideo"]["file"], "x.mp4")
         self.assertNotIn("upload", by_cls["LoadVideo"])         # the upload button is UI-only
-        self.assertIn("a", by_cls["SimpleMath+"])               # kept: it carries the lora's downscale factor
 
-    def test_a_linked_widget_input_uses_the_link_not_the_widget_value(self):
+    def test_a_linked_widget_input_uses_the_link_but_still_consumes_its_value_slot(self):
         empty = next(v for v in self.api.values() if v["class_type"] == "EmptyLTXVLatentVideo")["inputs"]
-        self.assertIsInstance(empty["width"], list)             # width/height/length come from GetImageSize
+        self.assertEqual(empty["width"], ["4", 0])              # linked: the 999 widget value is ignored
+        self.assertEqual(empty["height"], 32)                   # the NEXT widget value is not shifted onto width
         self.assertEqual(empty["batch_size"], 1)
 
     def test_patch_sets_plate_exr_dir_and_fps_without_mutating(self):
@@ -56,13 +57,74 @@ class UiToApi(unittest.TestCase):
         self.assertEqual(by_cls["LoadVideo"]["file"], "p.mp4")
         self.assertEqual(by_cls["LTXVHDRDecodePostprocess"]["output_dir"], "output/run1")
         self.assertEqual(by_cls["CreateVideo"]["fps"], 25.0)
-        self.assertEqual(by_cls["RandomNoise"]["noise_seed"], 9)
+
+    def test_a_graph_without_the_expected_nodes_is_a_clear_error(self):
+        g = json.loads(json.dumps(self.api))
+        for k in [k for k, v in g.items() if v["class_type"] == "LoadVideo"]:
+            del g[k]
+        with self.assertRaises(ValueError):
+            recover.patch_hdr_graph(g, plate_name="p", fps=24, exr_dir="o")
 
     def test_a_link_to_a_missing_node_is_an_error(self):
-        ui = json.loads(json.dumps(self.ui))
-        ui["nodes"] = [n for n in ui["nodes"] if n["type"] != "CheckpointLoaderSimple"]
+        ui = hdr_like_ui_graph()
+        ui["nodes"] = [n for n in ui["nodes"] if n["type"] != "GetVideoComponents"]
         with self.assertRaises(ValueError):
             recover.ui_to_api(ui)
+
+
+class FetchGraph(unittest.TestCase):
+    """RECOVER reads the user's copy of the upstream workflow: nothing of Lightricks' is shipped."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.d = Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_no_vendored_upstream_graph_in_the_repo(self):
+        root = Path(__file__).resolve().parent.parent
+        self.assertFalse((root / "graphs" / "ltx23-hdr-iclora.ui.json").exists())
+        shipped = {p.name for p in (root / "graphs").iterdir() if p.is_file()}
+        self.assertEqual(shipped, {"ltx25-cleanplate.api.json"})
+
+    def test_missing_copy_gives_exact_instructions(self):
+        with self.assertRaises(Refusal) as ctx:
+            recover.load_hdr_api_graph(self.d / "nope.json")
+        msg = str(ctx.exception)
+        self.assertIn(recover.UPSTREAM_GRAPH, msg)
+        self.assertIn("github.com/Lightricks/ComfyUI-LTXVideo", msg)
+        self.assertIn("fetch-graph", msg)
+
+    def test_local_copy_is_validated_and_copied_unchanged(self):
+        src = self.d / "dl.json"
+        src.write_text(json.dumps(hdr_like_ui_graph()))
+        dest = recover.fetch_graph(str(src), dest=self.d / "out" / "g.json")
+        self.assertEqual(dest.read_bytes(), src.read_bytes())
+        self.assertIn("SaveVideo", {v["class_type"] for v in recover.load_hdr_api_graph(dest).values()})
+
+    def test_html_or_wrong_json_is_refused(self):
+        bad = self.d / "page.html"
+        bad.write_text("<html>GitHub</html>")
+        with self.assertRaises(Refusal):
+            recover.fetch_graph(str(bad), dest=self.d / "g.json")
+        other = self.d / "api.json"
+        other.write_text(json.dumps({"1": {"class_type": "X", "inputs": {}}}))
+        with self.assertRaises(Refusal):
+            recover.fetch_graph(str(other), dest=self.d / "g.json")
+        self.assertFalse((self.d / "g.json").exists())
+
+    def test_url_source_goes_through_the_injected_opener_only(self):
+        class Resp(io.BytesIO):
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+        seen = []
+        def opener(req, timeout=0):
+            seen.append(req.full_url)
+            return Resp(json.dumps(hdr_like_ui_graph()).encode())
+        dest = recover.fetch_graph("https://example.invalid/raw/g.json", dest=self.d / "g.json", opener=opener)
+        self.assertEqual(seen, ["https://example.invalid/raw/g.json"])
+        self.assertTrue(dest.exists())
 
 
 class ExrPaths(unittest.TestCase):
