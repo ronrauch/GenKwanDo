@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cutting Room Lite</title>
+<style>
+:root{--bg:#07090c;--bg2:#0c1015;--bg3:#11161d;--edge:#1b232c;--txt:#c9d4dc;--dim:#6b7884;--acc:#0CE7EE;--ok:#2eff8a;--bad:#ff4d5e;--warn:#ffc861}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+header{padding:20px 16px 8px;max-width:1100px;margin:0 auto;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+h1{margin:0;font-size:26px;letter-spacing:.02em}
+.tag{color:var(--dim)}
+.badge{margin-left:auto;padding:4px 10px;border-radius:999px;font-size:12px;border:1px solid var(--edge)}
+.badge.dry{color:var(--warn);border-color:var(--warn)}
+.badge.live{color:var(--bad);border-color:var(--bad)}
+main{max-width:1100px;margin:0 auto;padding:0 16px 40px}
+.slot{margin:12px 0 18px;border:2px dashed var(--edge);border-radius:12px;padding:18px;color:var(--dim);background:var(--bg2);display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.slot b{color:var(--warn)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.card{background:var(--bg2);border:1px solid var(--edge);border-radius:12px;padding:14px}
+.card h2{margin:0 0 8px;font-size:16px}
+.num{display:inline-block;width:24px;height:24px;border-radius:50%;background:var(--acc);color:#001;text-align:center;line-height:24px;font-weight:700;margin-right:8px}
+label{display:block;margin:8px 0 4px;color:var(--dim);font-size:13px}
+input[type=text],input[type=number],select,textarea{width:100%;background:var(--bg3);color:var(--txt);border:1px solid var(--edge);border-radius:8px;padding:8px;font:inherit}
+textarea{min-height:64px}
+button{background:var(--acc);color:#001;border:0;border-radius:8px;padding:9px 14px;font:inherit;font-weight:600;cursor:pointer}
+button.alt{background:var(--bg3);color:var(--txt);border:1px solid var(--edge)}
+button:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+#coverPrev{width:100%;max-width:260px;aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid var(--edge);background:var(--bg3);display:block}
+canvas{width:100%;height:110px;background:var(--bg3);border-radius:8px;border:1px solid var(--edge);cursor:ew-resize;touch-action:none}
+.muted{color:var(--dim);font-size:13px}
+.msg{margin-top:8px;font-size:13px}
+.msg.err{color:var(--bad)}
+.win{margin-top:12px;border:1px solid var(--edge);border-radius:10px;padding:12px;background:var(--bg3)}
+.win h3{margin:0 0 6px;font-size:15px}
+.takes{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.take{border:1px solid var(--edge);border-radius:8px;padding:8px;width:230px;background:var(--bg2)}
+.take.appr{border-color:var(--ok)}
+.take video{width:100%;border-radius:6px;background:#000}
+.pill{font-size:11px;padding:2px 7px;border-radius:999px;border:1px solid var(--edge);color:var(--dim)}
+.pill.warn{color:var(--warn);border-color:var(--warn)}
+.pill.ok{color:var(--ok);border-color:var(--ok)}
+table{width:100%;border-collapse:collapse}
+td,th{padding:4px;text-align:left;vertical-align:top;font-size:13px}
+details summary{cursor:pointer;margin-top:18px;font-size:16px}
+pre{white-space:pre-wrap;word-break:break-word;background:var(--bg3);padding:8px;border-radius:8px;max-height:260px;overflow:auto;font-size:12px}
+footer{max-width:1100px;margin:0 auto;padding:24px 16px;color:var(--dim);font-size:12px;border-top:1px solid var(--edge);white-space:pre-line}
+</style>
+</head>
+<body>
+<header>
+  <h1>Cutting Room Lite</h1>
+  <span class="tag">An album cover and 30 seconds of a song, animated with MiniMax H3.</span>
+  <span id="badge" class="badge dry">DRY RUN</span>
+  <div class="tag" style="width:100%;font-size:13px">SPLIT the cover into performers &rarr; ANIMATE each one per window &rarr; COMP them back over the cover &rarr; ASSEMBLE with the original song</div>
+</header>
+<main>
+  <div class="slot" id="exampleSlot">
+    <div><b>EXAMPLE OUTPUT SLOT</b><br>Nothing has been rendered yet, so nothing is shown here. When a real take exists it goes in the README, not faked here.</div>
+  </div>
+
+  <div class="steps">
+    <section class="card" id="step1">
+      <h2><span class="num">1</span>Pick the cover</h2>
+      <img id="coverPrev" alt="cover preview" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+      <div class="row"><input id="coverFile" type="file" accept="image/*"></div>
+      <label for="coverType">What is on the cover?</label>
+      <select id="coverType"></select>
+      <label><input type="checkbox" id="hasVocals" checked> The slice has a singer</label>
+      <label for="style">Look (optional)</label>
+      <input type="text" id="style" placeholder="e.g. 1970s film close-up, warm key light, fine grain">
+      <details id="layersBox">
+        <summary style="font-size:14px">Cover layers (optional): animate each performer on their own</summary>
+        <p class="muted">No layers = the whole cover is animated as one. With layers, upload one <b>clean image per performer</b> (the performer alone, as a first frame, ideally square) and say where they sit on the cover. Splitting a cover automatically is a documented stretch, not built.</p>
+        <canvas id="layoutCv" width="520" height="520" style="height:auto;cursor:default"></canvas>
+        <div id="perfs"></div>
+        <div class="row"><button class="alt" id="addPerf">Add a performer</button><button class="alt" id="savePerfs">Save layers</button></div>
+      </details>
+      <div id="m1" class="msg"></div>
+    </section>
+
+    <section class="card" id="step2">
+      <h2><span class="num">2</span>Pick the song and the slice</h2>
+      <div class="row"><input id="songFile" type="file" accept="audio/*"></div>
+      <canvas id="wave" width="1000" height="110"></canvas>
+      <div class="row">
+        <label style="margin:0">Start (s) <input id="sliceStart" type="number" min="0" step="0.5" value="0" style="width:90px"></label>
+        <label style="margin:0">Length (s) <input id="sliceLen" type="number" min="1" step="0.5" value="30" style="width:90px"></label>
+        <button class="alt" id="playSlice" disabled>Play slice</button>
+      </div>
+      <p class="muted">Click or drag on the waveform to move the slice.</p>
+      <audio id="aud"></audio>
+      <div id="m2" class="msg"></div>
+    </section>
+
+    <section class="card" id="step3">
+      <h2><span class="num">3</span>Go</h2>
+      <div id="planSummary" class="muted">Pick a cover and a song first.</div>
+      <div class="row">
+        <button id="go" disabled>Make it</button>
+        <button class="alt" id="planBtn" disabled>Show the plan</button>
+      </div>
+      <p class="muted" id="goNote"></p>
+      <div id="m3" class="msg"></div>
+    </section>
+  </div>
+
+  <section id="room" style="display:none">
+    <h2 style="margin-top:26px">The cutting room</h2>
+    <p class="muted">Each window is its own render. Approve a take to lock it, or render another with a new seed. A window starts from the last frame of the approved window before it.</p>
+    <div id="wins"></div>
+    <div class="row">
+      <button id="assemble" disabled>Assemble the cut</button>
+      <span id="asmMsg" class="muted"></span>
+    </div>
+    <video id="final" controls style="display:none;width:100%;max-width:520px;margin-top:10px;border-radius:8px;background:#000"></video>
+  </section>
+
+</main>
+<footer id="foot"></footer>
+
+<script>
+const $=id=>document.getElementById(id);
+let ABOUT=null, STATE=null, PEAKS=null, DUR=0;
+
+async function api(path,opt={}){
+  const r=await fetch(path,opt); const j=await r.json().catch(()=>({error:'bad response'}));
+  if(!r.ok||j.error) throw new Error(j.error||('HTTP '+r.status)); return j;
+}
+const post=(p,b)=>api(p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b||{})});
+function say(id,t,err){const e=$(id);e.textContent=t||'';e.className='msg'+(err?' err':'');}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+async function init(){
+  ABOUT=await api('/api/about');
+  const b=$('badge'); b.textContent=ABOUT.live?('LIVE: '+ABOUT.backend+' via '+ABOUT.transport):'DRY RUN'; b.className='badge '+(ABOUT.live?'live':'dry');
+  b.title=ABOUT.live?'Renders spend credits':('Nothing is sent. '+ABOUT.gate.join('; '));
+  $('foot').textContent='Cutting Room Lite\n'+ABOUT.attribution+'\nv'+ABOUT.version+' · '+ABOUT.year+' · MIT licence';
+  const sel=$('coverType'); for(const [k,v] of Object.entries(ABOUT.cover_types)){const o=document.createElement('option');o.value=k;o.textContent=v;sel.appendChild(o);}
+  $('goNote').textContent=ABOUT.live?'Live: window 1 renders, then you approve it before the next starts.':'Dry run: writes the graphs and audio chunks for every window and sends nothing.';
+  await refresh();
+}
+async function refresh(){
+  STATE=await api('/api/project');
+  if(STATE.cover_url) $('coverPrev').src=STATE.cover_url+'?'+Date.now();
+  $('coverType').value=STATE.cover_type; $('hasVocals').checked=STATE.has_vocals; $('style').value=STATE.style||'';
+  $('sliceStart').value=STATE.slice.start; $('sliceLen').value=STATE.slice.length;
+  if(STATE.song){ $('aud').src=STATE.song_url; DUR=STATE.song_duration||0; $('playSlice').disabled=false; await drawWave(); }
+  $('go').disabled=$('planBtn').disabled=!(STATE.cover&&STATE.song);
+  renderPerfs(); renderRoom();
+}
+async function upload(kind,file,msg){
+  say(msg,'Uploading '+file.name+'...');
+  try{ await api('/api/upload?kind='+kind+'&name='+encodeURIComponent(file.name),{method:'POST',body:file}); say(msg,file.name); await refresh(); }
+  catch(e){ say(msg,e.message,true); }
+}
+$('coverFile').onchange=e=>e.target.files[0]&&upload('cover',e.target.files[0],'m1');
+$('songFile').onchange=e=>e.target.files[0]&&upload('song',e.target.files[0],'m2');
+
+// ---- waveform + slice ----
+async function drawWave(){
+  if(!PEAKS){ try{ PEAKS=(await api('/api/wave')).peaks; }catch(e){ say('m2',e.message,true); return; } }
+  const c=$('wave'),g=c.getContext('2d'),W=c.width,H=c.height; g.clearRect(0,0,W,H);
+  g.fillStyle='#2a3946'; PEAKS.forEach((p,i)=>{const x=i/PEAKS.length*W,h=p*H*.9;g.fillRect(x,(H-h)/2,Math.max(W/PEAKS.length,1),h);});
+  const s=+$('sliceStart').value,l=+$('sliceLen').value; if(DUR>0){ g.fillStyle='rgba(12,231,238,.28)'; g.fillRect(s/DUR*W,0,Math.min(l,DUR-s)/DUR*W,H); g.strokeStyle='#0CE7EE'; g.strokeRect(s/DUR*W,0,Math.min(l,DUR-s)/DUR*W,H); }
+}
+function moveSlice(ev){
+  if(!DUR) return; const r=$('wave').getBoundingClientRect(); const l=+$('sliceLen').value;
+  let s=(ev.clientX-r.left)/r.width*DUR-l/2; s=Math.max(0,Math.min(s,Math.max(DUR-l,0))); $('sliceStart').value=Math.round(s*2)/2; drawWave();
+}
+let drag=false; $('wave').onpointerdown=e=>{drag=true;$('wave').setPointerCapture(e.pointerId);moveSlice(e);};
+$('wave').onpointermove=e=>drag&&moveSlice(e); $('wave').onpointerup=()=>{drag=false;};
+$('sliceStart').oninput=$('sliceLen').oninput=drawWave;
+$('playSlice').onclick=()=>{const a=$('aud'),s=+$('sliceStart').value,l=+$('sliceLen').value; a.currentTime=s; a.play(); a.ontimeupdate=()=>{if(a.currentTime>=s+l){a.pause();}};};
+
+// ---- config + plan + go ----
+function cfg(){ return {cover_type:$('coverType').value,has_vocals:$('hasVocals').checked,style:$('style').value,
+  slice_start:+$('sliceStart').value,slice_length:+$('sliceLen').value}; }
+async function plan(){
+  await post('/api/config',cfg()); const r=await post('/api/plan'); await refresh();
+  const f=r.windows.reduce((a,w)=>a+w.deliver_frames,0), np=(STATE.effective||[]).length;
+  $('planSummary').textContent=r.count+' windows x '+np+' performer'+(np>1?'s':'')+', '+f+' frames ('+(f/24).toFixed(1)+' s) at 24 fps. Each window ~'+(f/24/r.count).toFixed(1)+' s.';
+  return r;
+}
+$('planBtn').onclick=async()=>{ try{ say('m3',''); await plan(); }catch(e){ say('m3',e.message,true);} };
+function animatable(){ return (STATE.effective||[]).filter(p=>p.enabled&&p.lane!=='perfcap'&&p.image); }
+$('go').onclick=async()=>{
+  try{ say('m3','Planning...'); const r=await plan(); $('go').disabled=true;
+    const ps=animatable(); if(!ps.length) throw new Error('No performer has a clean image yet.');
+    const n=ABOUT.live?1:r.count;
+    for(const p of ps) for(let k=0;k<n;k++){ say('m3',(ABOUT.live?'Rendering ':'Dry-running ')+p.id+', window '+(k+1)+' of '+r.count+'...'); await post('/api/render',{w:k,p:p.id}); await refresh(); }
+    say('m3',ABOUT.live?'Window 1 is ready. Approve it below, then render the next.':'Dry run done: graphs and audio chunks are under takes/. Nothing was sent.');
+    $('room').scrollIntoView({behavior:'smooth'});
+  }catch(e){ say('m3',e.message,true); } finally{ $('go').disabled=false; }
+};
+
+// ---- the room ----
+function renderRoom(){
+  const wins=STATE.windows||[]; $('room').style.display=wins.length?'block':'none'; if(!wins.length) return;
+  const box=$('wins'); box.innerHTML='';
+  wins.forEach(w=>{
+    const d=document.createElement('div'); d.className='win';
+    let h='<h3>Window '+(w.index+1)+' <span class="pill">song '+w.start_s.toFixed(1)+'s</span> <span class="pill">'+w.deliver_frames+' frames</span></h3>';
+    (STATE.effective||[]).forEach(p=>{
+      const t0=w.tracks[p.id]; if(!t0) return;
+      h+='<div style="margin-top:8px"><b>'+esc(p.id)+'</b> <span class="pill">'+esc(p.role)+'</span> <span class="pill '+(p.lane==='h3-audio'?'ok':'warn')+'">'+esc(p.lane)+'</span>'+(p.enabled?'':' <span class="pill">off</span>')+
+        '<details><summary class="muted" style="margin:0;font-size:13px">Prompt</summary><pre>'+esc(t0.prompt)+'</pre></details>';
+      (t0.notes||[]).forEach(n=>h+='<div class="pill warn" style="margin-top:4px">'+esc(n)+'</div>');
+      h+='<div class="takes">';
+      t0.takes.forEach(t=>{
+        const appr=t0.approved===t.id;
+        h+='<div class="take'+(appr?' appr':'')+'"><b>'+t.id+'</b> <span class="pill '+(t.state==='done'?'ok':'warn')+'">'+esc(t.state==='placeholder'?'PLACEHOLDER test pattern':t.state)+'</span>';
+        if(t.video) h+='<video controls preload="metadata" src="/media/'+t.video+'"></video>';
+        else h+='<div class="muted">No video (dry run). <a href="/api/graph?w='+w.index+'&p='+encodeURIComponent(p.id)+'&take='+t.id+'" target="_blank">graph</a></div>';
+        if(t.error) h+='<div class="msg err">'+esc(t.error)+'</div>';
+        h+='<div class="row">'+(t.video?'<button data-ap="'+w.index+'|'+p.id+'|'+t.id+'" '+(appr?'disabled':'')+'>'+(appr?'Approved':'Approve')+'</button>':'')+'</div></div>';
+      });
+      h+='</div><div class="row">';
+      if(p.lane==='perfcap') h+='<span class="muted">Performance-capture lane: not built, stays static on the cover.</span>';
+      else if(!p.image) h+='<span class="muted">Needs a clean image.</span>';
+      else{ h+='<button class="alt" data-rr="'+w.index+'|'+p.id+'">'+(t0.takes.length?'Render another take (new seed)':'Render this window')+'</button>';
+        if(!ABOUT.live) h+='<button class="alt" data-ph="'+w.index+'|'+p.id+'" title="A flat test clip, only to try approve, comp and assemble without H3">Add placeholder take (test only)</button>'; }
+      h+='</div></div>';
+    });
+    d.innerHTML=h; box.appendChild(d);
+  });
+  $('assemble').disabled=!STATE.ready_to_assemble;
+  const sp=s=>s.split('|');
+  box.querySelectorAll('[data-ap]').forEach(b=>b.onclick=async()=>{const [k,p,t]=sp(b.dataset.ap);try{await post('/api/approve',{w:+k,p,take:t});await refresh();}catch(e){say('m3',e.message,true);}});
+  box.querySelectorAll('[data-rr]').forEach(b=>b.onclick=async()=>{const [k,p]=sp(b.dataset.rr);b.disabled=true;b.textContent='Rendering...';try{await post('/api/render',{w:+k,p});await refresh();}catch(e){say('m3',e.message,true);await refresh();}});
+  box.querySelectorAll('[data-ph]').forEach(b=>b.onclick=async()=>{const [k,p]=sp(b.dataset.ph);try{await post('/api/placeholder',{w:+k,p});await refresh();}catch(e){say('m3',e.message,true);}});
+}
+$('assemble').onclick=async()=>{
+  $('asmMsg').textContent='Composing and assembling...';
+  try{ const r=await post('/api/assemble'); $('asmMsg').textContent=(r.placeholder?'PLACEHOLDER cut (test clips, not H3): ':'Done: ')+r.frames+' frames of '+r.expected_frames+', '+r.duration+' s'+(r.composed.length?'; composed: '+r.composed.join(', '):'')+(r.left_static.length?'; left static: '+r.left_static.join(', '):'');
+    const v=$('final'); v.style.display='block'; v.src='/media/'+r.file+'?'+Date.now(); }
+  catch(e){ $('asmMsg').textContent=e.message; }
+};
+
+// ---- cover layers (performers) ----
+const COLORS=['#0CE7EE','#ff4d5e','#2eff8a','#ffc861','#b18ce6','#5fa8e2'];
+function perfRow(p,i){
+  const d=document.createElement('div'); d.className='win'; d.dataset.id=p.id||('p'+(i+1)); d.dataset.image=p.image||''; d.dataset.matte=p.matte||'';
+  const opts=ABOUT.roles.map(r=>'<option'+(p.role===r?' selected':'')+'>'+r+'</option>').join('');
+  d.innerHTML='<div class="row" style="margin:0"><b>'+esc(d.dataset.id)+'</b><select class="r" style="width:110px">'+opts+'</select>'+
+    '<label style="margin:0"><input type="checkbox" class="en"'+(p.enabled===false?'':' checked')+'> animate</label><button class="alt rm" style="margin-left:auto">remove</button></div>'+
+    '<label>Who and where on the cover</label><input type="text" class="pe" value="">'+
+    '<label>What they do (instruments only)</label><input type="text" class="ve" placeholder="strikes the kit, sticks landing on kick and snare">'+
+    '<div class="row"><label style="margin:0">x <input type="number" class="x" style="width:80px"></label><label style="margin:0">y <input type="number" class="y" style="width:80px"></label><label style="margin:0">size <input type="number" class="w" style="width:80px"></label>'+
+    '<select class="la" style="width:150px"><option value="auto">lane: auto</option><option value="perfcap">perfcap (not built)</option></select></div>'+
+    '<div class="row"><label style="margin:0">Clean image <input type="file" class="fi" accept="image/*"></label><span class="muted im"></span></div>'+
+    '<div class="row"><label style="margin:0">Matte (optional) <input type="file" class="fm" accept="image/*"></label><span class="muted ma"></span></div>';
+  d.querySelector('.pe').value=p.person||''; d.querySelector('.ve').value=p.verb||''; d.querySelector('.x').value=p.x||0; d.querySelector('.y').value=p.y||0; d.querySelector('.w').value=p.w||500;
+  if(p.lane==='perfcap') d.querySelector('.la').value='perfcap';
+  d.querySelector('.im').textContent=p.image?'image set':'no image yet'; d.querySelector('.ma').textContent=p.matte?'matte set':'';
+  d.querySelector('.rm').onclick=()=>{d.remove();drawLayout();};
+  d.querySelectorAll('input[type=number]').forEach(n=>n.oninput=drawLayout);
+  d.querySelector('.fi').onchange=e=>perfUpload(d,'performer',e.target.files[0]);
+  d.querySelector('.fm').onchange=e=>perfUpload(d,'matte',e.target.files[0]);
+  return d;
+}
+function collectPerfs(){
+  return [...$('perfs').children].map(d=>({id:d.dataset.id,role:d.querySelector('.r').value,enabled:d.querySelector('.en').checked,
+    person:d.querySelector('.pe').value,verb:d.querySelector('.ve').value,x:+d.querySelector('.x').value,y:+d.querySelector('.y').value,w:+d.querySelector('.w').value,
+    lane:d.querySelector('.la').value==='perfcap'?'perfcap':'',image:d.dataset.image||null,matte:d.dataset.matte||null}));
+}
+async function saveLayers(){ await post('/api/config',{performers:collectPerfs()}); await refresh(); }
+async function perfUpload(d,kind,file){
+  if(!file) return; say('m1','Uploading '+file.name+'...');
+  try{ await saveLayers(); await api('/api/upload?kind='+kind+'&id='+encodeURIComponent(d.dataset.id)+'&name='+encodeURIComponent(file.name),{method:'POST',body:file}); say('m1',file.name+' set for '+d.dataset.id); await refresh(); }
+  catch(e){ say('m1',e.message,true); }
+}
+function renderPerfs(){
+  const box=$('perfs'); box.innerHTML=''; (STATE.performers||[]).forEach((p,i)=>box.appendChild(perfRow(p,i))); drawLayout();
+}
+$('addPerf').onclick=()=>{ const n=$('perfs').children.length+1; $('perfs').appendChild(perfRow({id:'p'+n+'_'+Date.now().toString(36).slice(-3),role:n===1?'singer':'drums',x:0,y:0,w:500},n)); $('layersBox').open=true; drawLayout(); };
+$('savePerfs').onclick=async()=>{ try{ await saveLayers(); if(STATE.cover&&STATE.song) await plan(); say('m1','Layers saved.'); }catch(e){ say('m1',e.message,true); } };
+function drawLayout(){
+  const c=$('layoutCv'),g=c.getContext('2d'); g.clearRect(0,0,c.width,c.height); g.fillStyle='#11161d'; g.fillRect(0,0,c.width,c.height);
+  const sz=(STATE&&STATE.size)||1248, sc=c.width/sz;
+  const draw=()=>{ [...$('perfs').children].forEach((d,i)=>{ const x=+d.querySelector('.x').value*sc,y=+d.querySelector('.y').value*sc,w=(+d.querySelector('.w').value||sz)*sc;
+      g.strokeStyle=COLORS[i%COLORS.length]; g.lineWidth=3; g.strokeRect(x,y,w,w); g.fillStyle=COLORS[i%COLORS.length]; g.font='14px sans-serif'; g.fillText(d.dataset.id+' ('+d.querySelector('.r').value+')',x+6,y+18); }); };
+  if(STATE&&STATE.cover_url){ const im=new Image(); im.onload=()=>{g.drawImage(im,0,0,c.width,c.height);draw();}; im.src=STATE.cover_url; } else draw();
+}
+init().catch(e=>say('m3',e.message,true));
+</script>
+</body>
+</html>

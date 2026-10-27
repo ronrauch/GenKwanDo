@@ -1,0 +1,3 @@
+# Optional: the official Comfy Python SDK, the documented primary submit path.
+# Not needed for the UI, the dry run or the tests; without it the stdlib HTTP fallback is used.
+comfy-sdk

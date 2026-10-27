@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plate Doctor</title>
+<style>
+  :root { --bg:#0e1114; --panel:#161b20; --edge:#262e36; --txt:#d5dde4; --dim:#7d8a96; --accent:#3fd0c9; --warn:#e8b64a; --bad:#ef6b73; --ok:#52d98a; }
+  @media (prefers-color-scheme: light) { :root { --bg:#f3f5f7; --panel:#fff; --edge:#d6dce2; --txt:#1c2329; --dim:#5d6a76; --accent:#0a8f89; --warn:#946a00; --bad:#b8323a; --ok:#1a8a4e; } }
+  * { box-sizing: border-box; }
+  [hidden] { display:none !important; }
+  body { margin:0; background:var(--bg); color:var(--txt); font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { display:flex; align-items:center; gap:16px; padding:14px 20px; border-bottom:1px solid var(--edge); flex-wrap:wrap; }
+  header h1 { margin:0; font-size:18px; letter-spacing:.04em; text-transform:uppercase; }
+  nav { display:flex; gap:4px; }
+  nav button { background:none; border:1px solid var(--edge); color:var(--dim); padding:6px 14px; border-radius:6px; cursor:pointer; font:inherit; }
+  nav button[aria-selected="true"] { color:var(--txt); border-color:var(--accent); }
+  main { max-width:1100px; margin:0 auto; padding:20px; }
+  section[hidden] { display:none; }
+  .lead { font-size:22px; margin:6px 0 4px; } .sub { color:var(--dim); margin:0 0 18px; }
+  .steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-bottom:18px; }
+  .card { background:var(--panel); border:1px solid var(--edge); border-radius:10px; padding:14px; }
+  .card h3 { margin:0 0 8px; font-size:14px; } .num { display:inline-block; width:22px; height:22px; border-radius:50%; background:var(--accent); color:#06201e; text-align:center; font-weight:700; margin-right:8px; }
+  label { display:block; font-size:12px; color:var(--dim); margin:8px 0 3px; }
+  input[type=text], input[type=number], select { width:100%; background:var(--bg); border:1px solid var(--edge); color:var(--txt); border-radius:6px; padding:7px 9px; font:inherit; }
+  button.act { background:var(--accent); color:#06201e; border:0; padding:9px 16px; border-radius:6px; font-weight:700; cursor:pointer; font:inherit; font-weight:700; }
+  button.ghost { background:none; border:1px solid var(--edge); color:var(--txt); padding:8px 14px; border-radius:6px; cursor:pointer; font:inherit; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px; }
+  .note { font-size:13px; color:var(--dim); } .badge { font-size:11px; padding:2px 7px; border-radius:99px; border:1px solid var(--warn); color:var(--warn); margin-left:6px; }
+  .badge.ok { border-color:var(--ok); color:var(--ok); }
+  #msg { margin:12px 0; padding:10px 12px; border-radius:8px; border:1px solid var(--edge); display:none; white-space:pre-wrap; }
+  #msg.bad { display:block; border-color:var(--bad); color:var(--bad); } #msg.good { display:block; border-color:var(--ok); }
+  table { border-collapse:collapse; width:100%; font-size:13px; } td, th { border-bottom:1px solid var(--edge); padding:5px 8px; text-align:left; }
+  .wipe { position:relative; width:100%; max-width:860px; aspect-ratio:var(--ar, 16/9); background:#000; border-radius:10px; overflow:hidden; margin-top:8px; user-select:none; }
+  .wipe video { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
+  #afterv { clip-path: inset(0 50% 0 0); }
+  .wipe .bar { position:absolute; top:0; bottom:0; left:50%; width:3px; background:var(--accent); transform:translateX(-1.5px); pointer-events:none; }
+  .wipe .tag { position:absolute; top:8px; padding:2px 8px; background:rgba(0,0,0,.6); color:#fff; border-radius:4px; font-size:12px; }
+  .tag.l { left:8px; } .tag.r { right:8px; }
+  input[type=range] { width:100%; max-width:860px; }
+  .slot { border:2px dashed var(--edge); border-radius:10px; padding:14px; color:var(--dim); margin-top:14px; }
+  footer { border-top:1px solid var(--edge); padding:14px 20px; color:var(--dim); font-size:12px; text-align:center; }
+  code { font-family: ui-monospace, Menlo, monospace; font-size:12px; }
+  @media (max-width:560px) { main { padding:14px; } header { padding:12px 14px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Plate Doctor</h1>
+  <nav role="tablist" aria-label="Bench">
+    <button role="tab" id="tab-remove" aria-selected="true" data-tab="remove">Remove</button>
+    <button role="tab" id="tab-recover" aria-selected="false" data-tab="recover">Recover</button>
+    <button role="tab" id="tab-direct" aria-selected="false" data-tab="direct">Direct</button>
+  </nav>
+  <span class="note" id="status"></span>
+</header>
+
+<main>
+<div id="msg" role="status"></div>
+
+<section id="remove">
+  <p class="lead">Make it vanish.</p>
+  <p class="sub">Take a performer or a prop out of a shot and rebuild the set behind it, then wipe before to after. Three steps.</p>
+  <div class="steps">
+    <div class="card"><h3><span class="num">1</span>Plate</h3>
+      <label for="plate">Plate file (video with audio, sides divisible by 32)</label>
+      <input type="text" id="plate" placeholder="/path/to/plate.mp4">
+      <div class="row"><button class="ghost" id="demo">Use the synthetic demo</button></div>
+      <p class="note">The demo is generated here from nothing: a box crossing a room. It checks the mechanics. It is not a Plate Doctor result.</p></div>
+    <div class="card"><h3><span class="num">2</span>Matte</h3>
+      <label for="matte">Matte (video or PNG folder, white = remove)</label>
+      <input type="text" id="matte" placeholder="/path/to/matte.mp4">
+      <p class="note">v0.1 takes a matte you made (any tracker or roto). Empty frames are refused. Click-to-matte is a later step.</p></div>
+    <div class="card"><h3><span class="num">3</span>Go</h3>
+      <label for="loc">Describe the EMPTY set (never "remove the person")</label>
+      <input type="text" id="loc" placeholder="a bright studio room, wooden chair, plain grey walls, soft window light">
+      <div class="row"><label style="margin:0"><input type="checkbox" id="probe" checked> 9-frame probe first</label></div>
+      <div class="row"><button class="act" id="go">Dry run (spends nothing)</button></div>
+      <p class="note">Plans the windows and writes the graphs. A real render is the CLI with <code>--go</code>.</p></div>
+  </div>
+
+  <div class="card" id="planbox" hidden>
+    <h3>Plan <span class="badge ok">dry run</span></h3>
+    <div id="plansum" class="note"></div>
+    <table id="plantab"><thead><tr><th>Window</th><th>Plate frames</th><th>Frozen</th><th>Rendered</th></tr></thead><tbody></tbody></table>
+    <p class="note" id="planprompt"></p><p class="note" id="planrun"></p>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h3>Before / after</h3>
+    <div class="row">
+      <div style="flex:1;min-width:220px"><label for="afterpath">After (the clean plate to compare; the demo fills this in)</label>
+        <input type="text" id="afterpath" placeholder="/path/to/clean_plate.mp4"></div>
+      <button class="ghost" id="load-wipe">Load wipe</button>
+      <button class="ghost" id="make-vanish">Make the vanish clip</button>
+    </div>
+    <p class="note" id="wipenote">No clip loaded. Pick a plate and an after clip, or use the demo.</p>
+    <div class="wipe" id="wipe" hidden>
+      <video id="beforev" muted loop playsinline></video>
+      <video id="afterv" muted loop playsinline></video>
+      <div class="bar" id="bar"></div><span class="tag l">BEFORE</span><span class="tag r">AFTER</span>
+    </div>
+    <input type="range" id="slider" min="0" max="100" value="50" hidden aria-label="Wipe position">
+    <div class="row" id="wctl" hidden><button class="ghost" id="play">Play / pause</button><a id="vanishlink" class="note" hidden target="_blank"></a></div>
+  </div>
+
+  <div class="slot" id="example-slot">
+    <strong>Example output: none yet.</strong> The README has a marked slot for the first real Plate Doctor result
+    (a vanish clip made from our own footage). Nothing here is staged.
+  </div>
+</section>
+
+<section id="recover" hidden>
+  <p class="lead">Recover the stops.</p>
+  <p class="sub">SDR plate in, gradeable HDR EXR sequence out, using the open-weights LTX-2.3 HDR IC-LoRA graph.</p>
+  <div class="card">
+    <label for="rplate">Plate file</label><input type="text" id="rplate" placeholder="/path/to/plate.mp4">
+    <label for="lane">Lane</label>
+    <select id="lane"><option value="graph">Local LTX-2.3 HDR IC-LoRA (open weights)</option>
+      <option value="ltx-api">Hosted api.ltx.video (PARTNER SERVICE, not open weights)</option></select>
+    <div class="row"><button class="act" id="rgo">Dry run (spends nothing)</button><span class="badge">API-converted graph: unproven</span></div>
+    <pre id="rout" class="note" style="white-space:pre-wrap"></pre>
+  </div>
+</section>
+
+<section id="direct" hidden>
+  <p class="lead">Direct the effect.</p>
+  <p class="sub">Draw a path and steer water or motion along it (LTX IC-LoRA water-sim + motion-track).</p>
+  <div class="card"><span class="badge">UNPROVEN, not wired in v0.1</span>
+    <p>This tab is a scaffold. The lane exists in the lab as a hand-run recipe; nothing here submits it yet.
+    See <code>docs/DIRECT.md</code> for what is known and what is missing.</p></div>
+</section>
+</main>
+
+<footer id="about">Plate Doctor</footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const post = async (url, body) => { const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)}); return [r.status, await r.json()]; };
+function say(text, kind) { const m = $('msg'); m.className = kind || ''; m.textContent = text || ''; if (!text) m.style.display = 'none'; else m.style.display = 'block'; }
+
+document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('nav button').forEach(x => x.setAttribute('aria-selected', x === b));
+  ['remove','recover','direct'].forEach(t => $(t).hidden = (t !== b.dataset.tab));
+  say('');
+}));
+
+fetch('/api/state').then(r => r.json()).then(s => {
+  $('about').textContent = `${s.app}\n${s.attribution}\nv${s.version} · ${s.year}`.replaceAll('\n', ' · ');
+  $('status').textContent = s.ffmpeg ? '' : 'ffmpeg not found';
+});
+
+// ---- wipe viewer
+function loadWipe(beforeUrl, afterUrl, note) {
+  const b = $('beforev'), a = $('afterv');
+  b.src = beforeUrl; a.src = afterUrl;
+  b.onloadedmetadata = () => { $('wipe').style.setProperty('--ar', `${b.videoWidth} / ${b.videoHeight}`); };
+  $('wipe').hidden = false; $('slider').hidden = false; $('wctl').hidden = false;
+  $('wipenote').textContent = note || 'Drag the slider: left of the line is AFTER, right is BEFORE.';
+  setWipe($('slider').value); b.play().catch(()=>{}); a.play().catch(()=>{});
+}
+function setWipe(pct) { $('afterv').style.clipPath = `inset(0 ${100 - pct}% 0 0)`; $('bar').style.left = pct + '%'; }
+$('slider').addEventListener('input', e => setWipe(e.target.value));
+$('play').addEventListener('click', () => { const b=$('beforev'), a=$('afterv'); if (b.paused) { b.play(); a.play(); } else { b.pause(); a.pause(); } });
+setInterval(() => { const b=$('beforev'), a=$('afterv'); if (!b.paused && Math.abs(a.currentTime - b.currentTime) > 0.08) a.currentTime = b.currentTime; }, 250);
+
+$('demo').addEventListener('click', async () => {
+  say('Generating the synthetic demo (no network)...');
+  const [code, d] = await post('/api/demo', {});
+  if (code !== 200) return say(d.refused || d.error || 'demo failed', 'bad');
+  $('plate').value = d.plate; $('matte').value = d.matte; $('afterpath').value = d.truth;
+  $('loc').value = 'a plain room with a dark floor of grey checker tiles and a smooth wall';
+  loadWipe(d.before_url, d.after_url, 'DEMO MECHANICS ONLY: the AFTER is the ground-truth background we generated, not a Plate Doctor result.');
+  say('Demo ready: plate, matte and ground truth are in the workspace.', 'good');
+});
+
+$('go').addEventListener('click', async () => {
+  say('Planning (no network, nothing sent)...');
+  const [code, m] = await post('/api/plan', {plate:$('plate').value, matte:$('matte').value, location:$('loc').value, probe:$('probe').checked});
+  if (code === 422) return say('REFUSED: ' + m.refused, 'bad');
+  if (code !== 200) return say(m.error || 'failed', 'bad');
+  $('planbox').hidden = false;
+  $('plansum').textContent = `${m.width}x${m.height} @ ${m.fps} fps · frames ${m.first}-${m.last} · ${m.estimate}`;
+  const tb = $('plantab').querySelector('tbody'); tb.innerHTML = '';
+  m.windows.forEach((w, i) => { const tr = tb.insertRow(); [`w${String(i).padStart(2,'0')}`, `${w.src_start}-${w.src_end}`, w.freeze, w.length].forEach(v => tr.insertCell().textContent = v); });
+  $('planprompt').textContent = 'Prompt: ' + m.prompt;
+  $('planrun').textContent = 'Written to: ' + m.run_dir;
+  say('Dry run complete. Nothing was sent anywhere.', 'good');
+});
+
+$('load-wipe').addEventListener('click', async () => {
+  const [c1, b] = await post('/api/stage', {path:$('plate').value, label:'before'});
+  const [c2, a] = await post('/api/stage', {path:$('afterpath').value, label:'after'});
+  if (c1 !== 200 || c2 !== 200) return say((b.error || a.error || b.refused || a.refused || 'could not stage clips'), 'bad');
+  loadWipe(b.url, a.url);
+});
+
+$('make-vanish').addEventListener('click', async () => {
+  say('Rendering the vanish clip...');
+  const [code, v] = await post('/api/vanish', {before:$('plate').value, after:$('afterpath').value});
+  if (code !== 200) return say(v.refused || v.error || 'failed', 'bad');
+  const l = $('vanishlink'); l.hidden = false; l.href = v.url; l.textContent = 'open vanish.mp4 (' + v.path + ')';
+  say('Vanish clip written.', 'good');
+});
+
+$('rgo').addEventListener('click', async () => {
+  const [code, m] = await post('/api/recover-plan', {plate:$('rplate').value, lane:$('lane').value});
+  if (code === 422) return say('REFUSED: ' + m.refused, 'bad');
+  if (code !== 200) return say(m.error || 'failed', 'bad');
+  $('rout').textContent = JSON.stringify(m, null, 1);
+  say('Dry run complete. Nothing was sent anywhere.', 'good');
+});
+</script>
+</body>
+</html>
