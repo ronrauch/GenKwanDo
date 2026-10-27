@@ -185,10 +185,10 @@ async function plan(){
   return r;
 }
 $('planBtn').onclick=async()=>{ try{ say('m3',''); await plan(); }catch(e){ say('m3',e.message,true);} };
-function animatable(){ return (STATE.effective||[]).filter(p=>p.enabled&&p.lane!=='perfcap'&&p.image); }
+function animatable(){ return (STATE.effective||[]).filter(p=>p.enabled&&p.role!=='beat'&&p.lane!=='perfcap'&&p.image); }
 $('go').onclick=async()=>{
   try{ say('m3','Planning...'); const r=await plan(); $('go').disabled=true;
-    const ps=animatable(); if(!ps.length) throw new Error('No performer has a clean image yet.');
+    const ps=animatable(); if(!ps.length && !(STATE.effective||[]).some(p=>p.role==='beat'&&p.enabled)) throw new Error('No performer has a clean image yet.');
     const n=ABOUT.live?1:r.count;
     for(const p of ps) for(let k=0;k<n;k++){ say('m3',(ABOUT.live?'Rendering ':'Dry-running ')+p.id+', window '+(k+1)+' of '+r.count+'...'); await post('/api/render',{w:k,p:p.id}); await refresh(); }
     say('m3',ABOUT.live?'Window 1 is ready. Approve it below, then render the next.':'Dry run done: graphs and audio chunks are under takes/. Nothing was sent.');
@@ -234,7 +234,7 @@ function renderRoom(){
 }
 $('assemble').onclick=async()=>{
   $('asmMsg').textContent='Composing and assembling...';
-  try{ const r=await post('/api/assemble'); $('asmMsg').textContent=(r.placeholder?'PLACEHOLDER cut (test clips, not H3): ':'Done: ')+r.frames+' frames of '+r.expected_frames+', '+r.duration+' s'+(r.composed.length?'; composed: '+r.composed.join(', '):'')+(r.left_static.length?'; left static: '+r.left_static.join(', '):'');
+  try{ const r=await post('/api/assemble'); $('asmMsg').textContent=(r.placeholder?'PLACEHOLDER cut (test clips, not H3): ':'Done: ')+r.frames+' frames of '+r.expected_frames+', '+r.duration+' s'+(r.composed.length?'; composed: '+r.composed.join(', '):'')+(Object.keys(r.beat||{}).length?'; beat objects: '+Object.entries(r.beat).map(([k,v])=>k+' ('+v.effect+', '+v.onsets.length+' hits'+(v.from_stem?'':', from the mix')+')').join(', '):'')+(r.left_static.length?'; left static: '+r.left_static.join(', '):'');
     const v=$('final'); v.style.display='block'; v.src='/media/'+r.file+'?'+Date.now(); }
   catch(e){ $('asmMsg').textContent=e.message; }
 };
@@ -244,17 +244,29 @@ const COLORS=['#0CE7EE','#ff4d5e','#2eff8a','#ffc861','#b18ce6','#5fa8e2'];
 function perfRow(p,i){
   const d=document.createElement('div'); d.className='win'; d.dataset.id=p.id||('p'+(i+1)); d.dataset.image=p.image||''; d.dataset.matte=p.matte||'';
   const opts=ABOUT.roles.map(r=>'<option'+(p.role===r?' selected':'')+'>'+r+'</option>').join('');
+  const stems=ABOUT.stems.map(s=>'<option'+((p.stem||ABOUT.role_stem[p.role]||'drums')===s?' selected':'')+'>'+s+'</option>').join('');
+  const effs=ABOUT.effects.map(e=>'<option'+(p.effect===e?' selected':'')+'>'+e+'</option>').join('');
   d.innerHTML='<div class="row" style="margin:0"><b>'+esc(d.dataset.id)+'</b><select class="r" style="width:110px">'+opts+'</select>'+
     '<label style="margin:0"><input type="checkbox" class="en"'+(p.enabled===false?'':' checked')+'> animate</label><button class="alt rm" style="margin-left:auto">remove</button></div>'+
     '<label>Who and where on the cover</label><input type="text" class="pe" value="">'+
-    '<label>What they do (instruments only)</label><input type="text" class="ve" placeholder="strikes the kit, sticks landing on kick and snare">'+
+    '<div class="notbeat"><label>What they do (instruments only)</label><input type="text" class="ve" placeholder="strikes the kit, sticks landing on kick and snare"></div>'+
+    '<div class="beatc"><div class="row"><label style="margin:0">Stem <select class="sm">'+stems+'</select></label>'+
+    '<label style="margin:0">Effect <select class="ef">'+effs+'</select></label>'+
+    '<label style="margin:0">Strength <input type="range" class="sr" min="0" max="1" step="0.05"> <span class="sv"></span></label>'+
+    '<label style="margin:0">Decay (s) <input type="number" class="dc" min="0" max="5" step="0.05" style="width:80px" placeholder="auto"></label></div>'+
+    '<p class="muted">A beat object: a visual effect on a still image, applied when the cut is assembled (no render, no cost). pulse = kick, flash = snare, sway = bass, glow = held notes. It is not a played instrument.</p></div>'+
     '<div class="row"><label style="margin:0">x <input type="number" class="x" style="width:80px"></label><label style="margin:0">y <input type="number" class="y" style="width:80px"></label><label style="margin:0">size <input type="number" class="w" style="width:80px"></label>'+
-    '<select class="la" style="width:150px"><option value="auto">lane: auto</option><option value="perfcap">perfcap (not built)</option></select></div>'+
+    '<select class="la notbeat" style="width:150px"><option value="auto">lane: auto</option><option value="perfcap">perfcap (not built)</option></select></div>'+
     '<div class="row"><label style="margin:0">Clean image <input type="file" class="fi" accept="image/*"></label><span class="muted im"></span></div>'+
     '<div class="row"><label style="margin:0">Matte (optional) <input type="file" class="fm" accept="image/*"></label><span class="muted ma"></span></div>';
   d.querySelector('.pe').value=p.person||''; d.querySelector('.ve').value=p.verb||''; d.querySelector('.x').value=p.x||0; d.querySelector('.y').value=p.y||0; d.querySelector('.w').value=p.w||500;
+  d.querySelector('.sr').value=p.strength==null?0.6:p.strength; d.querySelector('.dc').value=p.decay||'';
   if(p.lane==='perfcap') d.querySelector('.la').value='perfcap';
   d.querySelector('.im').textContent=p.image?'image set':'no image yet'; d.querySelector('.ma').textContent=p.matte?'matte set':'';
+  const sync=()=>{ const beat=d.querySelector('.r').value==='beat'; d.querySelectorAll('.notbeat').forEach(e=>e.style.display=beat?'none':''); d.querySelector('.beatc').style.display=beat?'':'none'; d.querySelector('.sv').textContent=(+d.querySelector('.sr').value).toFixed(2); };
+  d.querySelector('.r').onchange=()=>{ if(d.querySelector('.r').value==='beat'){ d.querySelector('.ef').value=ABOUT.effect_for_stem[d.querySelector('.sm').value]; } sync(); drawLayout(); };
+  d.querySelector('.sm').onchange=()=>{ d.querySelector('.ef').value=ABOUT.effect_for_stem[d.querySelector('.sm').value]; };
+  d.querySelector('.sr').oninput=sync; sync();
   d.querySelector('.rm').onclick=()=>{d.remove();drawLayout();};
   d.querySelectorAll('input[type=number]').forEach(n=>n.oninput=drawLayout);
   d.querySelector('.fi').onchange=e=>perfUpload(d,'performer',e.target.files[0]);
@@ -262,9 +274,12 @@ function perfRow(p,i){
   return d;
 }
 function collectPerfs(){
-  return [...$('perfs').children].map(d=>({id:d.dataset.id,role:d.querySelector('.r').value,enabled:d.querySelector('.en').checked,
+  return [...$('perfs').children].map(d=>{ const beat=d.querySelector('.r').value==='beat';
+    const o={id:d.dataset.id,role:d.querySelector('.r').value,enabled:d.querySelector('.en').checked,
     person:d.querySelector('.pe').value,verb:d.querySelector('.ve').value,x:+d.querySelector('.x').value,y:+d.querySelector('.y').value,w:+d.querySelector('.w').value,
-    lane:d.querySelector('.la').value==='perfcap'?'perfcap':'',image:d.dataset.image||null,matte:d.dataset.matte||null}));
+    lane:(!beat&&d.querySelector('.la').value==='perfcap')?'perfcap':'',image:d.dataset.image||null,matte:d.dataset.matte||null};
+    if(beat){ o.stem=d.querySelector('.sm').value; o.effect=d.querySelector('.ef').value; o.strength=+d.querySelector('.sr').value; o.decay=+d.querySelector('.dc').value||0; }
+    return o; });
 }
 async function saveLayers(){ await post('/api/config',{performers:collectPerfs()}); await refresh(); }
 async function perfUpload(d,kind,file){

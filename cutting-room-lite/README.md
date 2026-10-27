@@ -28,6 +28,7 @@ landscape). For a cover with several people, the app models the cover as layers:
 | | **Instruments** (drums, bass, guitar, keys): described in the prompt, lane `h3` | **UNPROVEN.** See the drummer test below |
 | | Instruments by performance capture, lane `perfcap` | **documented only, not built** |
 | COMP | each animated performer is overlaid back on the cover at its position and size, through a matte or alpha | built and tested with synthetic layers |
+| BEAT | **beat objects** (a drum, speaker, amp or vinyl shown as an object) pulse, flash, sway or glow to their stem. A visual effect on a still image, applied in COMP: no render, no GPU, no cost. **Not a played instrument** | built and tested on synthetic stems |
 | ASSEMBLE | the original song slice goes under the finished picture | built and tested |
 
 Performers you do not animate stay as they are on the cover. A clean PNG with an alpha channel doubles as the
@@ -95,12 +96,12 @@ close-up: `res_multistep`, `kl_optimal`, 8 steps with the 4-step turbo LoRA, 124
 ## What is proven and what is not
 
 - **Built and tested here:** window planning, graph building, audio trimming, the spend gate, dry runs, the web app,
-  layers, COMP with mattes, assembly to the exact slice length. 100 tests, no network.
+  layers, COMP with mattes, assembly to the exact slice length. 124 tests, no network.
 - **Not run here:** any real submit, on either route (SDK or HTTP). Audio upload to Comfy Cloud is unconfirmed (the
   docs describe the upload endpoint for images). A third chained window is untested (the reference graph chained two).
 - **Unproven:** instruments playing their parts through H3. Run the drummer test first.
 - **Not built:** auto-splitting a cover, the performance-capture lane, matte tracking (the matte is static: it is the
-  matte of the clean first frame).
+  matte of the clean first frame). Beat objects are tested on synthetic stems, not yet on real music.
 
 ## Tests
 

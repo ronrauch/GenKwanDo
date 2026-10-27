@@ -11,6 +11,7 @@ from pathlib import Path
 
 from . import ATTRIBUTION, VERSION, YEAR, media
 from .comfy_client import GateError, gate_reasons, get_runner
+from .beat import DEFAULT_DECAY, EFFECTS, default_effect
 from .players import LANE_STATUS, ROLE_STEM, ROLES, STEMS
 from .project import Project, ProjectError
 from .prompts import COVER_LABELS
@@ -46,6 +47,8 @@ class App:
             "gate": gate_reasons(self.backend, self.go, self.api_key),
             "cover_types": COVER_LABELS, "stems": list(STEMS), "lanes": LANE_STATUS,
             "roles": list(ROLES), "role_stem": ROLE_STEM,
+            "effects": list(EFFECTS), "effect_decay": DEFAULT_DECAY,
+            "effect_for_stem": {s: default_effect(s) for s in STEMS},
         }
 
 

@@ -12,6 +12,7 @@ import random
 import shutil
 from pathlib import Path
 
+from . import beat as beatmod
 from . import graph as graphmod
 from . import media
 from .comfy_client import FileInput
@@ -97,6 +98,13 @@ class Project:
         """The performers to animate: the layers, or the whole cover as one when there are none."""
         perfs = self.performers()
         return perfs or [whole_cover(self.state["size"], self.state["cover"])]
+
+    def animated(self) -> list[Performer]:
+        """Performers that get an H3 render (not beat objects, not the unbuilt perfcap lane)."""
+        return [p for p in self.effective() if p.enabled and p.role != "beat" and p.lane != "perfcap"]
+
+    def beat_layers(self) -> list[Performer]:
+        return [p for p in self.effective() if p.enabled and p.role == "beat"]
 
     def _performer(self, pid: str) -> Performer:
         for p in self.effective():
@@ -191,6 +199,8 @@ class Project:
             same_time = bool(old.get(w.index)) and all(
                 old[w.index].get(k) == entry[k] for k in ("start_s", "render_frames"))
             for p in self.effective():
+                if p.role == "beat":
+                    continue  # a beat object is a COMP effect: no prompt, no render, no takes
                 prompt = self.prompt_for(p)
                 prev = prev_tracks.get(p.id)
                 keep = same_time and prev and prev.get("prompt") == prompt and prev.get("image") == p.image
@@ -243,6 +253,8 @@ class Project:
     def render(self, k: int, pid: str, runner=None) -> dict:
         """Render one performer's window k. runner=None is a DRY RUN: it writes the graph and the audio chunk only."""
         p = self._performer(pid)
+        if p.role == "beat":
+            raise ProjectError(f"{pid}: a beat object is a COMP effect and is never rendered")
         if p.lane == "perfcap":
             raise ProjectError(f"{pid}: the performance-capture lane is not built in this version")
         if not p.image:
@@ -343,20 +355,39 @@ class Project:
         media.run(media.track_cmd(str(listing), str(track)))
         return str(track), placeholder
 
+    def beat_layer(self, p: Performer, frames: int) -> dict:
+        """COMP layer for a beat object: analyse its stem, build the per-frame transforms (no render, no GPU)."""
+        sl, size = self.state["slice"], self.state["size"]
+        if not p.image:
+            raise ProjectError(f"beat object {p.id} has no image yet")
+        rel = self.state["stems"].get(p.stem)
+        src = str(self.path(rel or self.state["song"]))
+        info = beatmod.analyze(src, sl["start"], sl["length"], p.effect, FPS)
+        x, y, w = layout_of(p, size)
+        trs = beatmod.frame_transforms(p.effect, p.strength, p.decay, info["onsets"], info["envelope"],
+                                       FPS, frames, (x, y, w), size)
+        return {"still": str(self.path(p.image)), "x": x, "y": y, "w": w,
+                "matte": str(self.path(p.matte)) if p.matte else None,
+                "beat": {"zoom": [t.zoom for t in trs], "angle": [t.angle for t in trs],
+                         "bright": [t.brightness for t in trs], "dx": [t.dx for t in trs], "dy": [t.dy for t in trs]},
+                "onsets": info["onsets"], "from_stem": bool(rel)}
+
     def assemble(self) -> dict:
         if not self.state["windows"]:
             raise ProjectError("plan the windows first")
-        perfs = [p for p in self.effective() if p.enabled and p.lane != "perfcap"]
-        if not perfs:
+        perfs, beats = self.animated(), self.beat_layers()
+        if not perfs and not beats:
             raise ProjectError("no performer is enabled and animatable")
         size = self.state["size"]
+        (self.root / "out").mkdir(exist_ok=True)
         tracks, placeholder = {}, False
         for p in perfs:
             tracks[p.id], ph = self._track_video(p)
             placeholder = placeholder or ph
         sl = self.state["slice"]
         frames = total_deliver_frames([self.window_obj(w["index"]) for w in self.state["windows"]])
-        if len(perfs) == 1 and perfs[0].role == "cover":
+        beat_info = {}
+        if len(perfs) == 1 and perfs[0].role == "cover" and not beats:
             picture = tracks["cover"]  # whole cover animated as one: nothing to comp
         else:
             layers = []
@@ -364,21 +395,29 @@ class Project:
                 x, y, w = layout_of(p, size)
                 layers.append({"video": tracks[p.id], "x": x, "y": y, "w": w,
                                "matte": str(self.path(p.matte)) if p.matte else None, "feather": p.feather})
+            for p in beats:
+                ly = self.beat_layer(p, frames)
+                beat_info[p.id] = {"effect": p.effect, "onsets": ly["onsets"], "from_stem": ly["from_stem"]}
+                layers.append(ly)
             picture = str(self.root / "out" / "comp.mp4")
             media.run(media.comp_cmd(str(self.path(self.state["cover"])), layers, picture, frames, size))
         name = "final_PLACEHOLDER.mp4" if placeholder else "final.mp4"
         dst = self.root / "out" / name
         media.run(media.mux_cmd(picture, str(self.path(self.state["song"])), sl["start"], sl["length"], str(dst)))
+        done = {p.id for p in perfs} | {p.id for p in beats}
         return {"file": str(dst.relative_to(self.root)), "placeholder": placeholder,
                 "frames": media.probe_frames(str(dst)), "expected_frames": frames,
                 "duration": round(media.probe_duration(str(dst)), 3),
                 "composed": [p.id for p in perfs if p.role != "cover"],
-                "left_static": [p.id for p in self.performers() if p not in perfs]}
+                "beat": beat_info,
+                "left_static": [p.id for p in self.performers() if p.id not in done]}
 
     def all_approved(self) -> bool:
         wins = self.state["windows"]
-        perfs = [p for p in self.effective() if p.enabled and p.lane != "perfcap"]
-        return bool(wins and perfs) and all(w["tracks"][p.id]["approved"] for w in wins for p in perfs)
+        perfs = self.animated()
+        if not wins or not (perfs or self.beat_layers()):
+            return False
+        return all(w["tracks"][p.id]["approved"] for w in wins for p in perfs)
 
     def public(self) -> dict:
         s = json.loads(json.dumps(self.state))

@@ -65,26 +65,55 @@ def track_cmd(list_file: str, dst: str) -> list[str]:
 
 
 def comp_cmd(backdrop: str, layers: list[dict], dst: str, frames: int, size: int = 1248, fps: int = FPS) -> list[str]:
-    """COMP: overlay each animated performer track on the cover backdrop.
+    """COMP: overlay each layer on the cover backdrop.
 
-    layers: dicts with video, x, y, w, and optionally matte (a png, white = performer) and feather (px).
+    Video layer: dicts with video, x, y, w, and optionally matte (a png, white = performer) and feather (px).
+    Beat layer: dicts with still (the object image), x, y, w, optionally matte, and beat = {zoom, angle,
+    bright, dx, dy}: one value per frame (see beat.py). The still is pulsed, rotated, brightened and moved with
+    ffmpeg expressions, so it costs nothing and needs no GPU.
     The cover stays as the backdrop, so a performer that is not animated simply stays as it is on the cover.
     """
+    from .beat import pw_expr
+
     cmd = [FFMPEG, "-y", "-loop", "1", "-framerate", str(fps), "-i", backdrop]
     chains = [f"[0:v]scale={size}:{size},format=rgba[b0]"]
     idx = 1
     for n, ly in enumerate(layers, start=1):
-        cmd += ["-i", ly["video"]]
+        beat = ly.get("beat")
+        w = ly["w"]
+        if beat:
+            cmd += ["-loop", "1", "-framerate", str(fps), "-i", ly["still"]]
+        else:
+            cmd += ["-i", ly["video"]]
         vi = idx
         idx += 1
-        chains.append(f"[{vi}:v]scale={ly['w']}:{ly['w']},format=rgba[v{n}]")
+        if beat:
+            z = pw_expr(beat["zoom"], "on")
+            zp = f"zoompan=z='{z}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s={w}x{w}:fps={fps}"
+            rot = f"rotate=a='{pw_expr(beat['angle'])}':ow=iw:oh=ih"
+            bright = pw_expr(beat["bright"])
+            chains.append(f"[{vi}:v]scale={w}:{w},{zp},{rot}:c=none,eq=brightness='{bright}':eval=frame,format=rgba[v{n}]")
+            # a beat layer always has a matte (white if none), so the rotated corners come out transparent
+            if ly.get("matte"):
+                cmd += ["-loop", "1", "-framerate", str(fps), "-i", ly["matte"]]
+            else:
+                cmd += ["-f", "lavfi", "-i", f"color=c=white:s={w}x{w}:r={fps}"]
+            mi = idx
+            idx += 1
+            chains.append(f"[{mi}:v]scale={w}:{w},{zp},{rot}:c=black,format=gray[m{n}]")
+            chains.append(f"[v{n}][m{n}]alphamerge[a{n}]")
+            ox = f"{ly['x']}+{pw_expr(beat['dx'])}"
+            oy = f"{ly['y']}+{pw_expr(beat['dy'])}"
+            chains.append(f"[b{n - 1}][a{n}]overlay=x='{ox}':y='{oy}':eval=frame:format=auto:shortest=0[b{n}]")
+            continue
+        chains.append(f"[{vi}:v]scale={w}:{w},format=rgba[v{n}]")
         src = f"v{n}"
         if ly.get("matte"):
             cmd += ["-loop", "1", "-framerate", str(fps), "-i", ly["matte"]]
             mi = idx
             idx += 1
             blur = f",gblur=sigma={ly['feather']}" if ly.get("feather") else ""
-            chains.append(f"[{mi}:v]scale={ly['w']}:{ly['w']},format=gray{blur}[m{n}]")
+            chains.append(f"[{mi}:v]scale={w}:{w},format=gray{blur}[m{n}]")
             chains.append(f"[v{n}][m{n}]alphamerge[a{n}]")
             src = f"a{n}"
         chains.append(f"[b{n - 1}][{src}]overlay=x={ly['x']}:y={ly['y']}:format=auto:shortest=0[b{n}]")

@@ -47,3 +47,18 @@ def pixel(video, t, x, y):
 
 def near(rgb, want, tol=14):
     return all(abs(a - b) <= tol for a, b in zip(rgb, want))
+
+
+def make_hits(dst, kind, seconds=4.0, bpm=120.0, offset=0.25):
+    """A synthetic stem with hits at offset, offset+beat, ... (kick, snare) or a slow swelling hum (hum)."""
+    period = 60.0 / bpm
+    phase = f"mod(t-{offset}\\,{period:.5f})"
+    gate = f"gte(t\\,{offset})"
+    expr = {
+        "kick": f"{gate}*0.8*exp(-25*{phase})*sin(2*PI*60*t)",
+        "snare": f"{gate}*0.8*exp(-60*{phase})*sin(2*PI*3000*t)",
+        "hum": "0.5*sin(2*PI*80*t)*(0.5+0.5*sin(2*PI*0.5*t))",
+    }[kind]
+    media.run(["ffmpeg", "-y", "-f", "lavfi", "-i", f"aevalsrc={expr}:s=48000:d={seconds}", "-ac", "2", str(dst)])
+    import math
+    return [round(offset + i * period, 4) for i in range(math.ceil((seconds - offset) / period - 1e-9))]

@@ -96,6 +96,9 @@ def cmd_render(args) -> int:
     for p in pr.effective():
         if args.performer and p.id != args.performer:
             continue
+        if p.role == "beat":
+            print(f"skip {p.id}: a beat object is a COMP effect, nothing to render")
+            continue
         if p.lane == "perfcap" or not p.image:
             print(f"skip {p.id}: " + ("performance-capture lane is not built" if p.lane == "perfcap" else "no clean image"))
             continue

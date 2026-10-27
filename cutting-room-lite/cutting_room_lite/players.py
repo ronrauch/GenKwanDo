@@ -13,17 +13,20 @@ House rule: an audio model moves a face, never sticks or hands. Instrument perfo
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 
-ROLES = ("singer", "drums", "bass", "guitar", "keys")
-ROLE_STEM = {"singer": "vocals", "drums": "drums", "bass": "bass", "guitar": "guitar", "keys": "piano"}
+from .beat import DEFAULT_DECAY, EFFECTS, default_effect
+
+ROLES = ("singer", "drums", "bass", "guitar", "keys", "beat")
+ROLE_STEM = {"singer": "vocals", "drums": "drums", "bass": "bass", "guitar": "guitar", "keys": "piano", "beat": "drums"}
 STEMS = ("vocals", "drums", "bass", "guitar", "piano", "other")  # the six stems of a 6-stem separation
-LANES = ("h3-audio", "h3", "perfcap")
+LANES = ("h3-audio", "h3", "perfcap", "comp")
 
 LANE_STATUS = {
     "h3-audio": "H3 audio-driven (the recipe proven for a singing close-up)",
     "h3": "prompt-driven in H3 (UNPROVEN: run the drummer test first)",
     "perfcap": "performance-capture lane (NOT BUILT in v0.1, documented only)",
+    "comp": "beat object: a visual effect on a still image in COMP (nothing rendered; not a played instrument)",
 }
 
 
@@ -47,6 +50,9 @@ class Performer:
     feather: float = 2.0           # matte edge softening, in pixels
     audio: str = "mix"             # which audio drives H3: "mix" (the song slice) or "stem" (the stem slice)
     enabled: bool = True
+    effect: str = ""               # beat objects only: pulse | flash | sway | glow
+    strength: float = 0.6          # beat objects only, 0..1
+    decay: float = 0.0             # beat objects only, seconds (0 = the effect's default)
 
     def to_dict(self) -> dict:
         d = asdict(self)
@@ -68,15 +74,30 @@ def parse_performers(raw: list[dict] | None, canvas: int = 1248) -> list[Perform
         stem = str(item.get("stem") or ROLE_STEM[role]).strip().lower()
         if stem not in STEMS:
             raise PlayerError(f"performer {pid}: stem must be one of {', '.join(STEMS)}")
-        lane = str(item.get("lane") or ("h3-audio" if role == "singer" else "h3")).strip().lower()
+        lane = str(item.get("lane") or ("h3-audio" if role == "singer" else "comp" if role == "beat" else "h3")).strip().lower()
         if lane not in LANES:
             raise PlayerError(f"performer {pid}: lane must be one of {', '.join(LANES)}")
+        if role == "beat":
+            lane = "comp"                          # a beat object is only ever a comp effect
+        elif lane == "comp":
+            raise PlayerError(f"performer {pid}: only a beat object uses the comp lane")
         if role == "singer" and lane == "h3":
             lane = "h3-audio"                      # a singer is always the audio-driven graph
-        if role != "singer" and lane == "h3-audio":
+        if role not in ("singer", "beat") and lane == "h3-audio":
             lane = "h3"                            # an instrument is never claimed to be audio-driven
         verb = str(item.get("verb", "")).strip()
-        if role != "singer" and lane == "h3" and not verb:
+        effect, strength, decay = "", 0.6, 0.0
+        if role == "beat":
+            effect = str(item.get("effect") or default_effect(stem)).strip().lower()
+            if effect not in EFFECTS:
+                raise PlayerError(f"performer {pid}: effect must be one of {', '.join(EFFECTS)}")
+            strength = float(item.get("strength", 0.6))
+            decay = float(item.get("decay") or 0.0)
+            if not 0.0 <= strength <= 1.0:
+                raise PlayerError(f"performer {pid}: strength must be between 0 and 1")
+            if decay < 0 or decay > 5:
+                raise PlayerError(f"performer {pid}: decay must be between 0 and 5 seconds")
+        if role not in ("singer", "beat") and lane == "h3" and not verb:
             raise PlayerError(f"performer {pid}: an instrument performer needs a verb (what they do)")
         w = int(item.get("w") or 0)
         x, y = int(item.get("x") or 0), int(item.get("y") or 0)
@@ -92,6 +113,7 @@ def parse_performers(raw: list[dict] | None, canvas: int = 1248) -> list[Perform
             id=pid, role=role, stem=stem, lane=lane, verb=verb, person=str(item.get("person", "")).strip(),
             image=item.get("image") or None, matte=item.get("matte") or None, x=x, y=y, w=w,
             feather=float(item.get("feather", 2.0)), audio=audio, enabled=bool(item.get("enabled", True)),
+            effect=effect, strength=strength, decay=decay,
         ))
     return out
 
@@ -108,6 +130,8 @@ def layout_of(p: Performer, canvas: int) -> tuple[int, int, int]:
 def notes_for(p: Performer, stem_active: bool | None) -> list[str]:
     """Flags the UI shows next to a performer's window: what is not being done."""
     notes = []
+    if p.role == "beat":
+        return [f"{p.id}: beat object, a visual effect on a still image (COMP only). Not a played instrument."]
     if p.lane == "perfcap":
         notes.append(f"{p.id} ({p.role}): needs a performance-capture render; not built, left static on the cover")
     elif p.role not in ("singer", "cover"):
