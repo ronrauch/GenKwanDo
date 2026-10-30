@@ -3,8 +3,8 @@ import shutil
 
 import pytest
 
-from cutting_room_lite import media
-from cutting_room_lite.project import Project, ProjectError
+from genkwando_engine import media
+from genkwando_engine.project import Project, ProjectError
 from conftest import near, needs_ffmpeg, pixel
 
 pytestmark = needs_ffmpeg
@@ -103,7 +103,7 @@ def test_each_performer_renders_with_its_own_clean_image_as_the_reference(layere
     layered.render(0, "drummer")
     g = json.loads((layered.root / "takes" / "drummer" / "w0" / "t001.graph.json").read_text())
     assert g["6"]["inputs"]["image"] == "drummer.png" and "drums part" in g["8"]["inputs"]["prompt"]
-    assert g["17"]["inputs"]["filename_prefix"].startswith("cutting-room-lite/t_drummer_w0")
+    assert g["17"]["inputs"]["filename_prefix"].startswith("genkwando-engine/t_drummer_w0")
 
 
 def test_an_instrument_can_be_driven_by_its_stem_and_a_quiet_stem_is_flagged(layered, assets):

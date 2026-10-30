@@ -1,4 +1,4 @@
-"""Cutting Room Lite: album cover + song slice -> music video, with MiniMax H3 on ComfyUI."""
+"""GenKwanDo Engine: album cover + song slice -> music video, with MiniMax H3 on ComfyUI."""
 
 VERSION = "0.1.0"
 YEAR = 2026
@@ -10,4 +10,4 @@ ATTRIBUTION = "TODO: credit line, decided at ship"
 
 def about() -> str:
     """The attribution block printed by `--about` and shown in the UI footer."""
-    return f"Cutting Room Lite\n{ATTRIBUTION}\nv{VERSION} · {YEAR}\nMIT licence"
+    return f"GenKwanDo Engine\n{ATTRIBUTION}\nv{VERSION} · {YEAR}\nMIT licence"

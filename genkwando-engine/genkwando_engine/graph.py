@@ -67,7 +67,7 @@ def build_window_graph(
     graph["9"]["inputs"]["noise_seed"] = int(seed)
     graph["16"]["inputs"]["fps"] = fps
     safe = "".join(c if c.isalnum() or c in "-_" else "_" for c in project)[:40] or "project"
-    graph["17"]["inputs"]["filename_prefix"] = f"cutting-room-lite/{safe}_w{window.index}_s{int(seed)}"
+    graph["17"]["inputs"]["filename_prefix"] = f"genkwando-engine/{safe}_w{window.index}_s{int(seed)}"
 
     if window.index > 0:
         graph[GUIDE_NODE] = {

@@ -62,7 +62,7 @@ def cmd_serve(args) -> int:
     srv = make_server(args.root, args.host, args.port, go=args.go, backend=args.backend,
                       transport=args.transport, api_key=_api_key())
     print(gate_banner(args))
-    print(f"Cutting Room Lite on http://{args.host}:{srv.server_address[1]}  (project: {args.root})")
+    print(f"GenKwanDo Engine on http://{args.host}:{srv.server_address[1]}  (project: {args.root})")
     try:
         srv.serve_forever()
     except KeyboardInterrupt:
@@ -169,8 +169,8 @@ def cmd_beat_overlay(args) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    ap = argparse.ArgumentParser(prog="cutting-room-lite", description=__doc__)
-    ap.add_argument("--version", action="version", version=f"cutting-room-lite {VERSION}")
+    ap = argparse.ArgumentParser(prog="genkwando-engine", description=__doc__)
+    ap.add_argument("--version", action="version", version=f"genkwando-engine {VERSION}")
     ap.add_argument("--about", action="store_true", help="print the attribution block")
     sub = ap.add_subparsers(dest="cmd")
 

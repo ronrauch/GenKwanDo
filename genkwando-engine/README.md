@@ -1,4 +1,4 @@
-# Cutting Room Lite
+# GenKwanDo Engine
 
 **Pick an album cover and 30 seconds of a song. Get a music video.** Built on the Comfy Developer
 Platform with MiniMax H3: the song drives the picture, so a singer's lips follow the vocal.
@@ -40,8 +40,8 @@ earn its place; see [docs/LAYERS.md](docs/LAYERS.md) and [docs/DRUMMER-TEST.md](
 Requirements: Python 3.10+, `ffmpeg` and `ffprobe` on your PATH. The app itself needs nothing else.
 
 ```bash
-git clone <this repo> && cd cutting-room-lite
-python3 -m cutting_room_lite serve --root my-project        # dry run: nothing is sent anywhere
+git clone <this repo> && cd genkwando-engine
+python3 -m genkwando_engine serve --root my-project        # dry run: nothing is sent anywhere
 # open http://127.0.0.1:8800
 ```
 
@@ -55,8 +55,8 @@ window under `takes/`, and prints the plan and window count first. A live run ne
 
 ```bash
 export COMFY_API_KEY=...                       # never put the key on the command line
-python3 -m cutting_room_lite serve --root my-project --go                       # Comfy Cloud
-python3 -m cutting_room_lite serve --root my-project --go --backend local       # your own ComfyUI
+python3 -m genkwando_engine serve --root my-project --go                       # Comfy Cloud
+python3 -m genkwando_engine serve --root my-project --go --backend local       # your own ComfyUI
 ```
 
 **Submit path.** The documented primary path is the official Comfy Python SDK (`comfy_sdk`), an optional extra:
@@ -71,18 +71,18 @@ and **neither has been run against the network in this version.**
 
 **Local run on your own GPU.** The graph uses the MiniMax H3 reference-to-video weights from the Comfy-Org H3 repo
 (the int8 `ref2va` model, the 4-step turbo LoRA, the Qwen3-VL text encoder, the H3 video and audio VAEs; filenames are
-in `cutting_room_lite/graphs/h3_ref2va_window.template.json`). Start ComfyUI with those in place and use
+in `genkwando_engine/graphs/h3_ref2va_window.template.json`). Start ComfyUI with those in place and use
 `--backend local`. H3 is a large model: plan for a high-VRAM card.
 
 ## Command line
 
 ```bash
-python3 -m cutting_room_lite plan --length 30                       # print the window plan
-python3 -m cutting_room_lite synthetic --root demo                  # test song + placeholder layers, no network
-python3 -m cutting_room_lite render --root demo                     # dry run (add --go to spend)
-python3 -m cutting_room_lite assemble --root demo
-python3 -m cutting_room_lite drummer-test --cover c.png --song s.wav --bpm 120
-python3 -m cutting_room_lite --about
+python3 -m genkwando_engine plan --length 30                       # print the window plan
+python3 -m genkwando_engine synthetic --root demo                  # test song + placeholder layers, no network
+python3 -m genkwando_engine render --root demo                     # dry run (add --go to spend)
+python3 -m genkwando_engine assemble --root demo
+python3 -m genkwando_engine drummer-test --cover c.png --song s.wav --bpm 120
+python3 -m genkwando_engine --about
 ```
 
 ## How a window works
@@ -115,6 +115,6 @@ See [docs/COMFY-SAVE.md](docs/COMFY-SAVE.md).
 
 ## About
 
-Cutting Room Lite
+GenKwanDo Engine
 TODO: credit line, decided at ship
 v0.1.0 · 2026 · MIT licence (see LICENSE)

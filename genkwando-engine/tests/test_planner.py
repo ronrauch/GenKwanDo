@@ -1,6 +1,6 @@
 import pytest
 
-from cutting_room_lite.planner import FPS, PlanError, plan_windows, total_deliver_frames
+from genkwando_engine.planner import FPS, PlanError, plan_windows, total_deliver_frames
 
 
 def test_thirty_seconds_is_three_even_windows():

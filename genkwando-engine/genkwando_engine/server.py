@@ -56,7 +56,7 @@ def make_server(root, host="127.0.0.1", port=0, **kw) -> ThreadingHTTPServer:
     app = App(root, **kw)
 
     class Handler(BaseHTTPRequestHandler):
-        server_version = "CuttingRoomLite/" + VERSION
+        server_version = "GenKwanDoEngine/" + VERSION
 
         def log_message(self, fmt, *args):  # quiet
             pass

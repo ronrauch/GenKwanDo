@@ -2,7 +2,7 @@ import subprocess
 
 import pytest
 
-from cutting_room_lite import media
+from genkwando_engine import media
 from conftest import near, needs_ffmpeg, pixel
 
 

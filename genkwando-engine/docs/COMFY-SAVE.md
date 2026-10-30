@@ -13,5 +13,5 @@ The window graph must live in the Comfy workspace as a named, documented workflo
 5. Register it in `secret-lab-widgets/cloud-workflows.json` and the cloud workflow registry with the measured cost.
 6. Status ladder: `candidate`, then `chosen`, then `approved`. New version = new `vNNN`; never delete.
 
-The graph to save is `cutting_room_lite/graphs/h3_ref2va_window.template.json` (window 0 form). The window > 0 form
+The graph to save is `genkwando_engine/graphs/h3_ref2va_window.template.json` (window 0 form). The window > 0 form
 adds one LoadImage node (`20`) for the previous take's last frame and points AddGuide's `image` at it.

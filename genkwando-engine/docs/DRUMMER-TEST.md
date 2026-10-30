@@ -5,7 +5,7 @@ test finds out whether H3's reference-to-video does better than that rule predic
 
 1. Take a clean image of one drummer, square, hands and sticks in frame, and a song with a clear drum part.
 2. Note the tempo (bpm) and the time of the first beat in the slice.
-3. Dry run first (free): `python3 -m cutting_room_lite drummer-test --cover drummer.png --song song.wav --bpm 120`
+3. Dry run first (free): `python3 -m genkwando_engine drummer-test --cover drummer.png --song song.wav --bpm 120`
    prints the plan and writes the graph and audio chunk. Look at `takes/drummer/w0/t001.graph.json`.
 4. One live window (spends credits; needs `--go` and a key): add `--go --first-beat 0.25`.
 5. The command burns a red box in the corner of the take that flashes on every beat. Watch the take against it.

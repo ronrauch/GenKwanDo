@@ -2,10 +2,10 @@ import math
 
 import pytest
 
-from cutting_room_lite import beat as B
-from cutting_room_lite import media
-from cutting_room_lite.players import PlayerError, parse_performers
-from cutting_room_lite.project import Project, ProjectError
+from genkwando_engine import beat as B
+from genkwando_engine import media
+from genkwando_engine.players import PlayerError, parse_performers
+from genkwando_engine.project import Project, ProjectError
 from conftest import make_hits, near, needs_ffmpeg, pixel
 
 FPS = 24
@@ -156,7 +156,7 @@ def test_beat_performer_defaults_and_validation():
 
 def test_beat_objects_are_labelled_as_effects_not_instruments():
     p = parse_performers([{"role": "beat"}])[0]
-    from cutting_room_lite.players import notes_for
+    from genkwando_engine.players import notes_for
     n = notes_for(p, True)
     assert len(n) == 1 and "visual effect" in n[0] and "Not a played instrument" in n[0]
     assert "NOT" not in p.to_dict()["status"] and "not a played instrument" in p.to_dict()["status"]

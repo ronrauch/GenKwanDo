@@ -75,7 +75,7 @@ A lip test on the same singer, seed and window raised lip sync from 0.37 to 0.50
 | Folder | What it is |
 |---|---|
 | [examples/genkwando-30s](examples/genkwando-30s) | Three 30-second pieces with input covers, songs, stills, the workflow file, a prompt and a node-by-node walkthrough |
-| [cutting-room-lite](cutting-room-lite) | Python tools: window planner, beat objects, prompt builder, Comfy client and graph helpers |
+| [genkwando-engine](genkwando-engine) | Python tools: window planner, beat objects, prompt builder, Comfy client and graph helpers |
 | [plate-doctor](plate-doctor) | Clean-plate tooling |
 
 ## Stack

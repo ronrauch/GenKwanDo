@@ -1,7 +1,7 @@
 import pytest
 
-from cutting_room_lite.players import PlayerError, layout_of, notes_for, parse_performers, whole_cover
-from cutting_room_lite.prompts import COVER_TYPES, pick_player_prompt, pick_prompt
+from genkwando_engine.players import PlayerError, layout_of, notes_for, parse_performers, whole_cover
+from genkwando_engine.prompts import COVER_TYPES, pick_player_prompt, pick_prompt
 
 
 @pytest.mark.parametrize("kind", COVER_TYPES)

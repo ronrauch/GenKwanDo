@@ -29,12 +29,12 @@ def test_no_content_hash_filenames_from_a_private_graph():
 
 
 def test_graph_template_is_scrubbed():
-    t = (ROOT / "cutting_room_lite" / "graphs" / "h3_ref2va_window.template.json").read_text()
-    assert "COVER.png" in t and "WINDOW_AUDIO.wav" in t and "cutting-room-lite/window" in t
+    t = (ROOT / "genkwando_engine" / "graphs" / "h3_ref2va_window.template.json").read_text()
+    assert "COVER.png" in t and "WINDOW_AUDIO.wav" in t and "genkwando-engine/window" in t
 
 
 def test_the_attribution_lives_in_one_constant_and_the_readme_has_a_todo():
-    src = (ROOT / "cutting_room_lite" / "__init__.py").read_text()
+    src = (ROOT / "genkwando_engine" / "__init__.py").read_text()
     assert src.count("ATTRIBUTION =") == 1 and "TODO: credit line" in src
     readme = (ROOT / "README.md").read_text()
     assert "TODO: credit line" in readme and "EXAMPLE OUTPUT" in readme

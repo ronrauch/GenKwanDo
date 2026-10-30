@@ -5,8 +5,8 @@ import urllib.request
 
 import pytest
 
-from cutting_room_lite import ATTRIBUTION, about, cli
-from cutting_room_lite.server import make_server
+from genkwando_engine import ATTRIBUTION, about, cli
+from genkwando_engine.server import make_server
 from conftest import needs_ffmpeg
 
 REAL_OPEN = urllib.request.OpenerDirector.open  # conftest blocks the network; the local app server is not the network

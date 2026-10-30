@@ -4,8 +4,8 @@ import types
 
 import pytest
 
-from cutting_room_lite import comfy_client as C
-from cutting_room_lite.comfy_client import FileInput, GateError
+from genkwando_engine import comfy_client as C
+from genkwando_engine.comfy_client import FileInput, GateError
 
 
 def test_gate_reasons():

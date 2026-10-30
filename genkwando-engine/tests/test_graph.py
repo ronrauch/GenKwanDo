@@ -2,8 +2,8 @@ import json
 
 import pytest
 
-from cutting_room_lite import graph as G
-from cutting_room_lite.planner import plan_windows
+from genkwando_engine import graph as G
+from genkwando_engine.planner import plan_windows
 
 W = plan_windows(0, 30)
 
@@ -29,7 +29,7 @@ def test_inputs_are_substituted():
     assert n["prompt"] == "P" and n["width"] == n["height"] == 1024
     assert n["length"] == W[1].render_frames == 241
     assert g["9"]["inputs"]["noise_seed"] == 7
-    assert g["17"]["inputs"]["filename_prefix"] == "cutting-room-lite/demo_w1_s7"
+    assert g["17"]["inputs"]["filename_prefix"] == "genkwando-engine/demo_w1_s7"
 
 
 def test_later_windows_guide_from_the_previous_last_frame_but_keep_the_cover_as_reference():

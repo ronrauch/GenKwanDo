@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cutting Room Lite</title>
+<title>GenKwanDo Engine</title>
 <style>
 :root{--bg:#07090c;--bg2:#0c1015;--bg3:#11161d;--edge:#1b232c;--txt:#c9d4dc;--dim:#6b7884;--acc:#0CE7EE;--ok:#2eff8a;--bad:#ff4d5e;--warn:#ffc861}
 *{box-sizing:border-box}
@@ -51,7 +51,7 @@ footer{max-width:1100px;margin:0 auto;padding:24px 16px;color:var(--dim);font-si
 </head>
 <body>
 <header>
-  <h1>Cutting Room Lite</h1>
+  <h1>GenKwanDo Engine</h1>
   <span class="tag">An album cover and 30 seconds of a song, animated with MiniMax H3.</span>
   <span id="badge" class="badge dry">DRY RUN</span>
   <div class="tag" style="width:100%;font-size:13px">SPLIT the cover into performers &rarr; ANIMATE each one per window &rarr; COMP them back over the cover &rarr; ASSEMBLE with the original song</div>
@@ -108,7 +108,7 @@ footer{max-width:1100px;margin:0 auto;padding:24px 16px;color:var(--dim);font-si
   </div>
 
   <section id="room" style="display:none">
-    <h2 style="margin-top:26px">The cutting room</h2>
+    <h2 style="margin-top:26px">The GenKwanDo Engine</h2>
     <p class="muted">Each window is its own render. Approve a take to lock it, or render another with a new seed. A window starts from the last frame of the approved window before it.</p>
     <div id="wins"></div>
     <div class="row">
@@ -137,7 +137,7 @@ async function init(){
   ABOUT=await api('/api/about');
   const b=$('badge'); b.textContent=ABOUT.live?('LIVE: '+ABOUT.backend+' via '+ABOUT.transport):'DRY RUN'; b.className='badge '+(ABOUT.live?'live':'dry');
   b.title=ABOUT.live?'Renders spend credits':('Nothing is sent. '+ABOUT.gate.join('; '));
-  $('foot').textContent='Cutting Room Lite\n'+ABOUT.attribution+'\nv'+ABOUT.version+' · '+ABOUT.year+' · MIT licence';
+  $('foot').textContent='GenKwanDo Engine\n'+ABOUT.attribution+'\nv'+ABOUT.version+' · '+ABOUT.year+' · MIT licence';
   const sel=$('coverType'); for(const [k,v] of Object.entries(ABOUT.cover_types)){const o=document.createElement('option');o.value=k;o.textContent=v;sel.appendChild(o);}
   $('goNote').textContent=ABOUT.live?'Live: window 1 renders, then you approve it before the next starts.':'Dry run: writes the graphs and audio chunks for every window and sends nothing.';
   await refresh();
