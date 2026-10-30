@@ -94,6 +94,21 @@ The tools in genkwando-engine are Python stdlib plus ffmpeg. Their 124 tests pas
 | [genkwando-engine](genkwando-engine) | Python tools: window planner, beat objects, prompt builder, Comfy client and graph helpers |
 | [plate-doctor](plate-doctor) | Clean-plate tooling |
 
+## Models used
+
+| Role | Model file | Where |
+|---|---|---|
+| Video model | `minimax_h3_ref2va_pruned_int8_convrot.safetensors` (MiniMax H3 reference-to-video with audio; Comfy Cloud only has it as int8) | both workflows |
+| Text encoder | `qwen3vl_32b_minimax_h3_bf16.safetensors` (Qwen3-VL 32B) | both workflows |
+| Video VAE | `minimax_h3_video_vae_fp16.safetensors` | both workflows |
+| Audio VAE | `minimax_h3_audio_vae_fp32.safetensors` | both workflows |
+| Lip-motion LoRA | `minimax_h3_lms_v1.0_r64.safetensors` | MASTER v3 |
+| Turbo LoRA, 8 steps | `minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors` | MASTER v3 |
+| Turbo LoRA, 4 steps | `minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors` | example chain workflow |
+| Stem separation | Demucs `htdemucs_6s`, through Comfy's AudioStemSeparate node | stems for every song |
+| Songs | ACE-Step on Comfy Cloud | generated example songs |
+| Covers | Z-Image on Comfy Cloud | generated example covers |
+
 ## Stack
 
 Comfy Cloud · MiniMax H3 reference-to-video with turbo LoRA · Qwen3-VL text encoder · Demucs htdemucs_6s · ACE-Step for generated songs · Z-Image for generated covers.
