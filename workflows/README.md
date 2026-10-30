@@ -6,3 +6,5 @@
 | [genkwando-master-v3.api.json](genkwando-master-v3.api.json) | The previous master: the same chain with a lip-motion LoRA stacked on the 8-step turbo LoRA and counted, everything-moves prompts. Kept for comparison. |
 
 Load one in Comfy Cloud or ComfyUI, swap the LoadImage cover and the three LoadAudio files (song, vocals stem, drums stem), and run. The walkthrough of every node is in [examples/genkwando-30s](../examples/genkwando-30s/README.md).
+
+Version history with save times: [VERSIONS.md](VERSIONS.md).
