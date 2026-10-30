@@ -12,17 +12,6 @@ All art and music here were generated for this project (Z-Image covers, ACE-Step
 
 The workflow that made the four-man band is [genkwando-30s-chain.api.json](genkwando-30s-chain.api.json) (Comfy API format), and its prompt is [prompt-four-man-band.txt](prompt-four-man-band.txt).
 
-## Measured, not eyeballed
-
-Every render is scored against the song's own stems.
-
-| Example | Lip sync (Pearson) | Mouth closed in silence | Players on their stem | Window joins (frame match) |
-|---|---|---|---|---|
-| Four-man band | 0.38 | 0.75 | drummer locks to drums, p = 0.02 | 0.991 / 0.990 |
-| Soul singer | 0.31 | 0.59 | vocals only | 0.959 / 0.950 |
-
-The colour funk band has not been scored on the gate yet. Lip sync is the weakest check: the best 30-second run is 0.38 against a 0.40 pass line, and a 10-second solo-singer test reached 0.50 with the lip-motion LoRA.
-
 ## How it flows
 
 ```mermaid
@@ -94,4 +83,3 @@ The graph is grouped into zones. Z1 input, Z4 music slices, Z5 MiniMax H3, Z7 as
 | Size | 1248x1248 square |
 | Windows | 3 × 243 frames at 24 fps, chained on the last frame |
 | Seed | 210664234423221 |
-| GPU time, four-man band | 1,632 GPU-seconds on Comfy Cloud (RTX PRO 6000) |
