@@ -68,7 +68,21 @@ flowchart LR
 | Soul singer | 0.31 | 0.59 | Vocals only | 0.95 |
 | Paisley trio | 0.63 | 0.80 | Light shifts mid-window | 0.98 |
 
-A lip test on the same singer, seed and window raised lip sync from 0.37 to 0.50 at the same GPU cost by stacking a lip-motion LoRA with a newer turbo LoRA. That setting goes into the next master workflow.
+A lip test on the same singer, seed and window raised lip sync from 0.37 to 0.50 at the same GPU cost by stacking a lip-motion LoRA with a newer turbo LoRA. That setting is in MASTER v3. Its first 30-second render, the four-man band at 1248x1248, is [examples/genkwando-30s/master-v3-band-30s.mp4](examples/genkwando-30s/master-v3-band-30s.mp4).
+
+## Run it
+
+1. Open [workflows/genkwando-master-v3.api.json](workflows/genkwando-master-v3.api.json) in Comfy Cloud or ComfyUI.
+2. Load your cover, your song, and its vocals and drums stems (Demucs htdemucs_6s).
+3. Write the three window prompts, or build them with [genkwando-engine](genkwando-engine).
+4. Run. Out comes a 30-second, 727-frame video with your song underneath.
+
+The tools in genkwando-engine are Python stdlib plus ffmpeg. Their 124 tests pass: `cd genkwando-engine && python -m pytest`.
+
+## Where it stands
+
+- Lip sync is the weakest check. The best 30-second run reached 0.38 against a 0.40 pass line.
+- MASTER v3 is proven at 1248x1248. A first run on a brand-new wide cover at 1536x864 drifted from the cover on frame 0, so the next step is fitting wide covers inside 1248.
 
 ## In this repository
 

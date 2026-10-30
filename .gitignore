@@ -8,3 +8,5 @@ demo/
 *.mp3
 *.wav
 .DS_Store
+!examples/**/*.mp4
+!examples/**/*.mp3
