@@ -75,7 +75,7 @@ flowchart LR
 
 ## Run it
 
-1. Open [workflows/genkwando-master-v3.api.json](workflows/genkwando-master-v3.api.json) in Comfy Cloud or ComfyUI.
+1. Open [workflows/genkwando-master-v4.api.json](workflows/genkwando-master-v4.api.json) in Comfy Cloud or ComfyUI.
 2. Load your cover, your song, and its vocals and drums stems (Demucs htdemucs_6s).
 3. Write the three window prompts, or build them with [genkwando-engine](genkwando-engine).
 4. Run. Out comes a 30-second, 727-frame video with your song underneath.
@@ -85,7 +85,8 @@ The tools in genkwando-engine are Python stdlib plus ffmpeg. Their 124 tests pas
 ## Where it stands
 
 - Every piece here is square. Other shapes are untested.
-- The four-man band was re-rendered with calmer settings: seed 210664234423219, a 4-step turbo LoRA, res_multistep with kl_optimal at 8 steps, and prompts that keep heads calm and shoulders still. The drummer locks to the drums stem. The bassist is next: a render that gives him the bass stem as his own audio reference is running.
+- MASTER v4 is the current master and made the four-man band video. It is MASTER v3 with calmer settings: seed 210664234423221 on all three windows, the 4-step turbo LoRA alone, res_multistep with kl_optimal at 8 steps, and prompts that keep heads calm and shoulders still. The seed change is what locked the bassist to the bass line; the drummer locks to the drums stem.
+- The trumpeter and the lips still need work.
 
 ## In this repository
 
@@ -99,13 +100,13 @@ The tools in genkwando-engine are Python stdlib plus ffmpeg. Their 124 tests pas
 
 | Role | Model file | Where |
 |---|---|---|
-| Video model | `minimax_h3_ref2va_pruned_int8_convrot.safetensors` (MiniMax H3 reference-to-video with audio; Comfy Cloud only has it as int8) | both workflows |
-| Text encoder | `qwen3vl_32b_minimax_h3_bf16.safetensors` (Qwen3-VL 32B) | both workflows |
-| Video VAE | `minimax_h3_video_vae_fp16.safetensors` | both workflows |
-| Audio VAE | `minimax_h3_audio_vae_fp32.safetensors` | both workflows |
-| Lip-motion LoRA | `minimax_h3_lms_v1.0_r64.safetensors` | MASTER v3 |
-| Turbo LoRA, 8 steps | `minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors` | MASTER v3 |
-| Turbo LoRA, 4 steps | `minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors` | example chain workflow |
+| Video model | `minimax_h3_ref2va_pruned_int8_convrot.safetensors` (MiniMax H3 reference-to-video with audio; Comfy Cloud only has it as int8) | every workflow |
+| Text encoder | `qwen3vl_32b_minimax_h3_bf16.safetensors` (Qwen3-VL 32B) | every workflow |
+| Video VAE | `minimax_h3_video_vae_fp16.safetensors` | every workflow |
+| Audio VAE | `minimax_h3_audio_vae_fp32.safetensors` | every workflow |
+| Lip-motion LoRA | `minimax_h3_lms_v1.0_r64.safetensors` | MASTER v3 only |
+| Turbo LoRA, 8 steps | `minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors` | MASTER v3 only |
+| Turbo LoRA, 4 steps | `minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors` | MASTER v4 and the example chain workflow |
 | Stem separation | Demucs `htdemucs_6s`, through Comfy's AudioStemSeparate node | stems for every song |
 | Songs | ACE-Step on Comfy Cloud | generated example songs |
 | Covers | Z-Image on Comfy Cloud | generated example covers |
