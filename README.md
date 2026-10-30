@@ -6,6 +6,8 @@ GenKwanDo takes a cover image and a song. It finds who is in the picture, splits
 
 Built for the Open Source Higgsfield challenge by Ron Rauch.
 
+**[Watch the 99-second demo](examples/GenKwanDo-demo.mp4)**
+
 | Image in | 30 seconds out |
 |---|---|
 | <img src="examples/genkwando-30s/stills/band-0s.jpg" width="280"> | <img src="examples/genkwando-30s/stills/band-10s.jpg" width="280"> <img src="examples/genkwando-30s/stills/band-20s.jpg" width="280"> |
