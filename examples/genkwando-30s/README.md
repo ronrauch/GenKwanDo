@@ -1,6 +1,6 @@
 # GenKwanDo — 30-second examples
 
-Give GenKwanDo a band image and a song. It finds who is in the picture, splits the song into stems, gives every performer their own part, and MiniMax H3 on Comfy Cloud animates the image for 30 seconds with the original song underneath. The image you load is frame 0, at its own shape, with everyone in it.
+Give GenKwanDo a band image and a song. It finds who is in the picture, splits the song into stems, gives every performer their own part, and MiniMax H3 on Comfy Cloud animates the image for 30 seconds with the original song underneath. Covers are square. The image you load is frame 0, with everyone in it.
 
 All art and music here were generated for this project (Z-Image covers, ACE-Step songs).
 
@@ -8,7 +8,6 @@ All art and music here were generated for this project (Z-Image covers, ACE-Step
 |---|---|---|---|
 | Four-man band | [cover-four-man-band.jpg](cover-four-man-band.jpg) | [song-anthem.mp3](song-anthem.mp3) | [band-30s.mp4](band-30s.mp4) |
 | Soul singer | [cover-soul-singer.jpg](cover-soul-singer.jpg) | [song-soul-anthem.mp3](song-soul-anthem.mp3) | [soul-30s.mp4](soul-30s.mp4) |
-| Paisley trio | [cover-paisley-trio.jpg](cover-paisley-trio.jpg) | [song-funk.mp3](song-funk.mp3) | [paisley-30s.mp4](paisley-30s.mp4) |
 
 The workflow that made the four-man band is [genkwando-30s-chain.api.json](genkwando-30s-chain.api.json) (Comfy API format), and its prompt is [prompt-four-man-band.txt](prompt-four-man-band.txt).
 
@@ -20,7 +19,6 @@ Every render is scored against the song's own stems.
 |---|---|---|---|---|
 | Four-man band | 0.38 | 0.75 | drummer locks to drums, p = 0.02 | 0.991 / 0.990 |
 | Soul singer | 0.31 | 0.59 | vocals only | 0.959 / 0.950 |
-| Paisley trio | 0.63 | 0.80 | lighting shifts mid-window | 0.978 / 0.982 |
 
 Work in progress: lips pass on solo and duo covers; large bands are still being dialled in.
 
@@ -28,7 +26,7 @@ Work in progress: lips pass on solo and duo covers; large bands are still being 
 
 ```mermaid
 flowchart LR
-  A[Cover image] --> R[Resize to its own aspect, /32<br/>frame 0 = the cover]
+  A[Cover image] --> R[Square, /32<br/>frame 0 = the cover]
   S[Song] --> D[Demucs stems<br/>vocals, drums, bass, other]
   A --> M[Map performers to stems<br/>one singer or none]
   D --> M
@@ -60,7 +58,7 @@ The graph is grouped into zones. Z1 input, Z4 music slices, Z5 MiniMax H3, Z7 as
 
 **Z1 Inputs**
 - `6` LoadImage — the cover. This exact image is frame 0.
-- `18` ImageResizeKJv2 — the first node after the cover. Centre-crops to the render size at the cover's own aspect, divisible by 32.
+- `18` ImageResizeKJv2 — the first node after the cover. Centre-crops the square cover to the square render size, divisible by 32.
 - `7` LoadAudio — the original song. It is what you hear in the final video.
 - `710` LoadAudio — the vocals stem, called `<Audio 1>` in the prompt.
 - `720` LoadAudio — the drums stem, called `<Audio 2>` in the prompt.
@@ -92,7 +90,7 @@ The graph is grouped into zones. Z1 input, Z4 music slices, Z5 MiniMax H3, Z7 as
 | Setting | Value |
 |---|---|
 | Model | MiniMax H3 ref2va + turbo LoRA, 8 steps, res_multistep, kl_optimal |
-| Size | 1248 on the long side, cover's own aspect |
+| Size | 1248x1248 square |
 | Windows | 3 × 243 frames at 24 fps, chained on the last frame |
 | Seed | 210664234423221 |
 | GPU time, four-man band | 1,632 GPU-seconds on Comfy Cloud (RTX PRO 6000) |

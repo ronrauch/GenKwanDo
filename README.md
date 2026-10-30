@@ -2,7 +2,7 @@
 
 **Any band image. Any song. A 30-second performance where every player plays their own part.**
 
-GenKwanDo takes a cover image and a song. It finds who is in the picture, splits the song into stems, gives each performer the stem they play, and animates the image for 30 seconds with MiniMax H3 on Comfy Cloud. The original song plays underneath. The image you load is frame 0, at its own shape, with everyone in it.
+GenKwanDo takes a cover image and a song. It finds who is in the picture, splits the song into stems, gives each performer the stem they play, and animates the image for 30 seconds with MiniMax H3 on Comfy Cloud. The original song plays underneath. Covers are square. The image you load is frame 0, rendered at 1248x1248, with everyone in it. The band and soul videos in examples are 720x720 copies to keep the repo small; the MASTER v3 video is full size.
 
 Built for the Open Source Higgsfield challenge by Ron Rauch.
 
@@ -10,7 +10,6 @@ Built for the Open Source Higgsfield challenge by Ron Rauch.
 |---|---|
 | <img src="examples/genkwando-30s/stills/band-0s.jpg" width="280"> | <img src="examples/genkwando-30s/stills/band-10s.jpg" width="280"> <img src="examples/genkwando-30s/stills/band-20s.jpg" width="280"> |
 | <img src="examples/genkwando-30s/stills/soul-0s.jpg" width="280"> | <img src="examples/genkwando-30s/stills/soul-10s.jpg" width="280"> <img src="examples/genkwando-30s/stills/soul-20s.jpg" width="280"> |
-| <img src="examples/genkwando-30s/stills/paisley-0s.jpg" width="280"> | <img src="examples/genkwando-30s/stills/paisley-10s.jpg" width="280"> <img src="examples/genkwando-30s/stills/paisley-20s.jpg" width="280"> |
 
 Watch the full pieces, with their input covers and songs, in [examples/genkwando-30s](examples/genkwando-30s/README.md).
 
@@ -25,7 +24,7 @@ Watch the full pieces, with their input covers and songs, in [examples/genkwando
 
 ```mermaid
 flowchart LR
-  A[Cover image] --> R[Resize to its own shape<br/>frame 0 = the cover]
+  A[Cover image] --> R[Square 1248x1248<br/>frame 0 = the cover]
   S[Song] --> D[Demucs stems]
   A --> M[Map performers to stems]
   D --> M
@@ -66,9 +65,8 @@ flowchart LR
 |---|---|---|---|---|
 | Four-man band | 0.38 | 0.75 | Drummer locks to the drums stem, p = 0.02 | 0.99 |
 | Soul singer | 0.31 | 0.59 | Vocals only | 0.95 |
-| Paisley trio | 0.63 | 0.80 | Light shifts mid-window | 0.98 |
 
-A lip test on the same singer, seed and window raised lip sync from 0.37 to 0.50 at the same GPU cost by stacking a lip-motion LoRA with a newer turbo LoRA. That setting is in MASTER v3. Its first 30-second render, the four-man band at 1248x1248, is [examples/genkwando-30s/master-v3-band-30s.mp4](examples/genkwando-30s/master-v3-band-30s.mp4).
+A lip test on the same singer, seed and window raised lip sync from 0.37 to 0.50 at the same GPU cost by stacking a lip-motion LoRA with a newer turbo LoRA. That setting is in MASTER v3. Its first 30-second render, the four-man band at 1248x1248 (not yet scored on the gate), is [examples/genkwando-30s/master-v3-band-30s.mp4](examples/genkwando-30s/master-v3-band-30s.mp4).
 
 ## Run it
 
@@ -82,13 +80,13 @@ The tools in genkwando-engine are Python stdlib plus ffmpeg. Their 124 tests pas
 ## Where it stands
 
 - Lip sync is the weakest check. The best 30-second run reached 0.38 against a 0.40 pass line.
-- MASTER v3 is proven at 1248x1248. A first run on a brand-new wide cover at 1536x864 drifted from the cover on frame 0, so the next step is fitting wide covers inside 1248.
+- Every piece here is square. Other shapes are untested.
 
 ## In this repository
 
 | Folder | What it is |
 |---|---|
-| [examples/genkwando-30s](examples/genkwando-30s) | Three 30-second pieces with input covers, songs, stills, the workflow file, a prompt and a node-by-node walkthrough |
+| [examples/genkwando-30s](examples/genkwando-30s) | Square 30-second pieces with input covers, songs, stills, the workflow file, a prompt and a node-by-node walkthrough |
 | [genkwando-engine](genkwando-engine) | Python tools: window planner, beat objects, prompt builder, Comfy client and graph helpers |
 | [plate-doctor](plate-doctor) | Clean-plate tooling |
 
