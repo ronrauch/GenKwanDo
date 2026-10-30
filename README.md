@@ -109,6 +109,8 @@ The tools in genkwando-engine are Python stdlib plus ffmpeg. Their 124 tests pas
 | Songs | ACE-Step on Comfy Cloud | generated example songs |
 | Covers | Z-Image on Comfy Cloud | generated example covers |
 
+**Running locally or on RunPod? Use the full-weight MiniMax H3 model, not the int8 one.** Comfy Cloud only offers H3 as int8, so every render here used it. On your own GPU, load the heavier full-precision H3 in the UNETLoader (node 1) and keep everything else the same.
+
 ## Stack
 
 Comfy Cloud · MiniMax H3 reference-to-video with turbo LoRA · Qwen3-VL text encoder · Demucs htdemucs_6s · ACE-Step for generated songs · Z-Image for generated covers.
