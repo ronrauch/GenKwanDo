@@ -84,6 +84,7 @@ The tools in genkwando-engine are Python stdlib plus ffmpeg. Their 124 tests pas
 
 - Lip sync is the weakest check. The best 30-second run reached 0.38 against a 0.40 pass line.
 - Every piece here is square. Other shapes are untested.
+- In the MASTER v3 band render the bassist jumps between frames. A re-render with calmer settings is running: seed 210664234423219, a 4-step turbo LoRA, res_multistep with kl_optimal at 8 steps, and prompts that keep heads calm and shoulders still.
 
 ## In this repository
 
