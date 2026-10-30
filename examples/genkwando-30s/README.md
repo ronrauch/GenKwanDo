@@ -9,6 +9,7 @@ All art and music here were generated for this project (Z-Image covers, ACE-Step
 | Four-man band | [cover-four-man-band.jpg](cover-four-man-band.jpg) | [song-anthem.mp3](song-anthem.mp3) | [band-30s.mp4](band-30s.mp4) |
 | Soul singer | [cover-soul-singer.jpg](cover-soul-singer.jpg) | [song-soul-anthem.mp3](song-soul-anthem.mp3) | [soul-30s.mp4](soul-30s.mp4) |
 | Colour funk band | [cover-colour-funk-band.jpg](cover-colour-funk-band.jpg) | [song-funk-band.mp3](song-funk-band.mp3) | [funk-band-30s.mp4](funk-band-30s.mp4) |
+| Porch guitarist | [cover-porch-guitarist.jpg](cover-porch-guitarist.jpg) | [song-porch-country.mp3](song-porch-country.mp3) | [porch-30s.mp4](porch-30s.mp4) |
 
 The workflow that made the four-man band is [genkwando-30s-chain.api.json](genkwando-30s-chain.api.json) (Comfy API format), and its prompt is [prompt-four-man-band.txt](prompt-four-man-band.txt).
 

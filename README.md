@@ -16,6 +16,17 @@ Built for the Open Source Higgsfield challenge by Ron Rauch.
 
 Watch the full pieces, with their input covers and songs, in [examples/genkwando-30s](examples/genkwando-30s/README.md).
 
+## Watch the 30-second pieces
+
+Click a title; GitHub plays the video with its song.
+
+| Piece | Cover | What moves |
+|---|---|---|
+| [Four-man band](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/band-30s.mp4) | <img src="examples/genkwando-30s/cover-four-man-band.jpg" width="120"> | Singer, bassist, trumpeter and drummer, each on their own part |
+| [Porch guitarist](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/porch-30s.mp4) | <img src="examples/genkwando-30s/cover-porch-guitarist.jpg" width="120"> | Strumming hand and a slow, calm sway; the voice is off camera |
+| [Colour funk band](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/funk-band-30s.mp4) | <img src="examples/genkwando-30s/cover-colour-funk-band.jpg" width="120"> | Five players and dancers on stage |
+| [Soul singer](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/soul-30s.mp4) | <img src="examples/genkwando-30s/cover-soul-singer.jpg" width="120"> | One singer, close up |
+
 ## How it works
 
 1. **Look.** Every person, instrument and element on the cover is identified. Exactly one singer is chosen, or none.
