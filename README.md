@@ -83,3 +83,7 @@ A lip test on the same singer, seed and window raised lip sync from 0.37 to 0.50
 Comfy Cloud · MiniMax H3 reference-to-video with turbo LoRA · Qwen3-VL text encoder · Demucs htdemucs_6s · ACE-Step for generated songs · Z-Image for generated covers.
 
 All example art and music were generated for this project.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
