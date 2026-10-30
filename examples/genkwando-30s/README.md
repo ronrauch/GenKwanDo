@@ -8,6 +8,7 @@ All art and music here were generated for this project (Z-Image covers, ACE-Step
 |---|---|---|---|
 | Four-man band | [cover-four-man-band.jpg](cover-four-man-band.jpg) | [song-anthem.mp3](song-anthem.mp3) | [band-30s.mp4](band-30s.mp4) |
 | Soul singer | [cover-soul-singer.jpg](cover-soul-singer.jpg) | [song-soul-anthem.mp3](song-soul-anthem.mp3) | [soul-30s.mp4](soul-30s.mp4) |
+| Colour funk band | [cover-colour-funk-band.jpg](cover-colour-funk-band.jpg) | [song-funk-band.mp3](song-funk-band.mp3) | [funk-band-30s.mp4](funk-band-30s.mp4) |
 
 The workflow that made the four-man band is [genkwando-30s-chain.api.json](genkwando-30s-chain.api.json) (Comfy API format), and its prompt is [prompt-four-man-band.txt](prompt-four-man-band.txt).
 
@@ -20,7 +21,7 @@ Every render is scored against the song's own stems.
 | Four-man band | 0.38 | 0.75 | drummer locks to drums, p = 0.02 | 0.991 / 0.990 |
 | Soul singer | 0.31 | 0.59 | vocals only | 0.959 / 0.950 |
 
-Work in progress: lips pass on solo and duo covers; large bands are still being dialled in.
+The colour funk band has not been scored on the gate yet. Lip sync is the weakest check: the best 30-second run is 0.38 against a 0.40 pass line, and a 10-second solo-singer test reached 0.50 with the lip-motion LoRA.
 
 ## How it flows
 

@@ -2,7 +2,7 @@
 
 **Any band image. Any song. A 30-second performance where every player plays their own part.**
 
-GenKwanDo takes a cover image and a song. It finds who is in the picture, splits the song into stems, gives each performer the stem they play, and animates the image for 30 seconds with MiniMax H3 on Comfy Cloud. The original song plays underneath. Covers are square. The image you load is frame 0, rendered at 1248x1248, with everyone in it. The band and soul videos in examples are 720x720 copies to keep the repo small; the MASTER v3 video is full size.
+GenKwanDo takes a cover image and a song. It finds who is in the picture, splits the song into stems, gives each performer the stem they play, and animates the image for 30 seconds with MiniMax H3 on Comfy Cloud. The original song plays underneath. Covers are square. The image you load is frame 0, rendered at 1248x1248, with everyone in it. The band, soul and funk videos in examples are 720x720 copies to keep the repo small; the MASTER v3 video is full size.
 
 Built for the Open Source Higgsfield challenge by Ron Rauch.
 
@@ -12,6 +12,7 @@ Built for the Open Source Higgsfield challenge by Ron Rauch.
 |---|---|
 | <img src="examples/genkwando-30s/stills/band-0s.jpg" width="280"> | <img src="examples/genkwando-30s/stills/band-10s.jpg" width="280"> <img src="examples/genkwando-30s/stills/band-20s.jpg" width="280"> |
 | <img src="examples/genkwando-30s/stills/soul-0s.jpg" width="280"> | <img src="examples/genkwando-30s/stills/soul-10s.jpg" width="280"> <img src="examples/genkwando-30s/stills/soul-20s.jpg" width="280"> |
+| <img src="examples/genkwando-30s/stills/funk-0s.jpg" width="280"> | <img src="examples/genkwando-30s/stills/funk-10s.jpg" width="280"> <img src="examples/genkwando-30s/stills/funk-20s.jpg" width="280"> |
 
 Watch the full pieces, with their input covers and songs, in [examples/genkwando-30s](examples/genkwando-30s/README.md).
 
