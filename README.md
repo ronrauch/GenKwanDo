@@ -62,15 +62,6 @@ flowchart LR
 - Say everything positively. "No X" raises the odds of X.
 - Each player moves a different body part on a different beat, so you can tell who plays what.
 
-## Results so far
-
-| Piece | Lip sync | Mouth closed in silence | Players | Joins |
-|---|---|---|---|---|
-| Four-man band | 0.38 | 0.75 | Drummer locks to the drums stem, p = 0.02 | 0.99 |
-| Soul singer | 0.31 | 0.59 | Vocals only | 0.95 |
-
-A lip test on the same singer, seed and window raised lip sync from 0.37 to 0.50 at the same GPU cost by stacking a lip-motion LoRA with a newer turbo LoRA. That setting is in MASTER v3. Its first 30-second render, the four-man band at 1248x1248 (not yet scored on the gate), is [examples/genkwando-30s/master-v3-band-30s.mp4](examples/genkwando-30s/master-v3-band-30s.mp4).
-
 ## Run it
 
 1. Open [workflows/genkwando-master-v3.api.json](workflows/genkwando-master-v3.api.json) in Comfy Cloud or ComfyUI.
