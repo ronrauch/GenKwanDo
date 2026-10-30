@@ -85,7 +85,7 @@ The tools in genkwando-engine are Python stdlib plus ffmpeg. Their 124 tests pas
 ## Where it stands
 
 - Every piece here is square. Other shapes are untested.
-- In the MASTER v3 band render the bassist jumps between frames. A re-render with calmer settings is running: seed 210664234423219, a 4-step turbo LoRA, res_multistep with kl_optimal at 8 steps, and prompts that keep heads calm and shoulders still.
+- The four-man band was re-rendered with calmer settings: seed 210664234423219, a 4-step turbo LoRA, res_multistep with kl_optimal at 8 steps, and prompts that keep heads calm and shoulders still. The drummer locks to the drums stem. The bassist is next: a render that gives him the bass stem as his own audio reference is running.
 
 ## In this repository
 
