@@ -13,7 +13,7 @@ A comp swaps one player's region in from another take of the same cover. The cam
 
 | Comp | Made | File | How |
 |---|---|---|---|
-| Four-man band, colour matched (now band-30s.mp4) | 2026-10-30 18:40 PT | [band-30s.mp4](../examples/genkwando-30s/band-30s.mp4) | v4 render, every frame colour matched to the cover at strength 0.5 with [tools/colour_match.py](../tools/colour_match.py). Brightness drift 39.7% to 20.5%; bassist p 0.024, drummer p 0.013. Raw v4 render kept as [band-30s-v4.mp4](../examples/genkwando-30s/band-30s-v4.mp4). |
+| Four-man band, colour matched (now band-30s.mp4) | 2026-10-30 18:07 PT | [band-30s.mp4](../examples/genkwando-30s/band-30s.mp4) | v4 render, every frame colour matched to the cover at strength 0.5 with [tools/colour_match.py](../tools/colour_match.py). Brightness drift 39.7% to 20.5%; bassist p 0.024, drummer p 0.013. Raw v4 render kept as [band-30s-v4.mp4](../examples/genkwando-30s/band-30s-v4.mp4). |
 | Four-man band, bass comp | 2026-10-30 13:50 PT | [band-30s-comp.mp4](../examples/genkwando-30s/band-30s-comp.mp4) | v4 render as the base, bassist region from an earlier calm take, feathered mask |
 
 ## Tried after v4 (not adopted)
