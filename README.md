@@ -22,7 +22,7 @@ Click a title; GitHub plays the video with its song.
 
 | Piece | Cover | What moves |
 |---|---|---|
-| [Four-man band](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/band-30s.mp4) ([bass comp](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/band-30s-comp.mp4)) | <img src="examples/genkwando-30s/cover-four-man-band.jpg" width="120"> | Singer, bassist, trumpeter and drummer, each on their own part |
+| [Four-man band](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/band-30s.mp4) ([v4 raw](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/band-30s-v4.mp4), [bass comp](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/band-30s-comp.mp4)) | <img src="examples/genkwando-30s/cover-four-man-band.jpg" width="120"> | Singer, bassist, trumpeter and drummer, each on their own part |
 | [Porch guitarist](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/porch-30s.mp4) | <img src="examples/genkwando-30s/cover-porch-guitarist.jpg" width="120"> | Strumming hand and a slow, calm sway; the voice is off camera |
 | [Colour funk band](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/funk-band-30s.mp4) | <img src="examples/genkwando-30s/cover-colour-funk-band.jpg" width="120"> | Five players and dancers on stage |
 | [Soul singer](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/soul-30s.mp4) | <img src="examples/genkwando-30s/cover-soul-singer.jpg" width="120"> | One singer, close up |
@@ -86,6 +86,7 @@ The tools in genkwando-engine are Python stdlib plus ffmpeg. Their 124 tests pas
 
 - Every piece here is square. Other shapes are untested.
 - MASTER v4 is the current master and made the four-man band video. It is MASTER v3 with calmer settings: seed 210664234423221 on all three windows, the 4-step turbo LoRA alone, res_multistep with kl_optimal at 8 steps, and prompts that keep heads calm and shoulders still. The seed change is what locked the bassist to the bass line; the drummer locks to the drums stem.
+- The four-man band video is the MASTER v4 render with one step after rendering: [tools/colour_match.py](tools/colour_match.py) matches every frame's colour to the cover at strength 0.5. That cut the brightness drift from 39.7% to 20.5% and kept both locks (bassist p 0.024, drummer p 0.013). The raw v4 render is [band-30s-v4.mp4](examples/genkwando-30s/band-30s-v4.mp4).
 - The trumpeter and the lips still need work. Every version, with its save time, is in [workflows/VERSIONS.md](workflows/VERSIONS.md).
 
 ## In this repository
