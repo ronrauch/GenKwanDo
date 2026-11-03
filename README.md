@@ -90,6 +90,7 @@ The tools in genkwando-engine are Python stdlib plus ffmpeg. Their 124 tests pas
 - Every piece here is square. Other shapes are untested.
 - MASTER v4 is the current master and made the four-man band video. It is MASTER v3 with calmer settings: seed 210664234423221 on all three windows, the 4-step turbo LoRA alone, res_multistep with kl_optimal at 8 steps, and prompts that keep heads calm and shoulders still. The seed change is what locked the bassist to the bass line; the drummer locks to the drums stem.
 - The four-man band video is the MASTER v4 render with one step after rendering: [tools/colour_match.py](tools/colour_match.py) matches every frame's colour to the cover at strength 0.5. That cut the brightness drift from 39.7% to 20.5% and kept both locks (bassist p 0.024, drummer p 0.013). The raw v4 render is [band-30s-v4.mp4](examples/genkwando-30s/band-30s-v4.mp4).
+- **GenKwanDo EASY v1** ([workflow](workflows/genkwando-easy-v1.api.json), [test video](examples/genkwando-30s/easy-v1-band-30s.mp4)) is the one-pass version: one image and one song in, Run, 30 seconds out. On the four-man band the bass and drums stay locked (p 0.055 and 0.018) and the lips score 0.53 against v4's 0.48; the light drifts more than v4. It has run on one cover so far. Instrument naming and the auto-written prompts use Google Gemini, a paid partner node.
 - The trumpeter and the lips still need work. Every version, with its save time, is in [workflows/VERSIONS.md](workflows/VERSIONS.md).
 
 ## In this repository

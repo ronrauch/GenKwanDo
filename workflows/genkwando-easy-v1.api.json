@@ -1,0 +1,2583 @@
+{
+ "6": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "4e1dd823a61e042c8bbb79f39040a34c8aaf860e4ed1b8f52dd72d08999d04ed.png"
+  },
+  "_meta": {
+   "title": "EASY v1 | INPUT 1: load ONE image (album cover, any size)"
+  }
+ },
+ "18": {
+  "class_type": "ImageResizeKJv2",
+  "inputs": {
+   "image": [
+    "6",
+    0
+   ],
+   "width": 1248,
+   "height": 1248,
+   "upscale_method": "lanczos",
+   "keep_proportion": "crop",
+   "pad_color": "0, 0, 0",
+   "crop_position": "center",
+   "divisible_by": 32
+  },
+  "_meta": {
+   "title": "EASY v1 | SQUARE 1248x1248 (keep_proportion: crop = centre crop, pad = keep whole image; lanczos upscales small thumbnails)"
+  }
+ },
+ "7": {
+  "class_type": "LoadAudio",
+  "inputs": {
+   "audio": "c020e7b75e3b75db22faa2dd48d0540d6cc0da2bb82dfb32c172a13b40b95015.flac"
+  },
+  "_meta": {
+   "title": "EASY v1 | INPUT 2: load ONE song (full mix)"
+  }
+ },
+ "8": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "7",
+    0
+   ],
+   "start_index": 0.0,
+   "duration": 30.291666666666668
+  },
+  "_meta": {
+   "title": "EASY v1 | TRIM song: start_index = optional start offset (s); 30.292 s = 727 frames"
+  }
+ },
+ "1001": {
+  "class_type": "AudioStemSeparate",
+  "inputs": {
+   "audio": [
+    "8",
+    0
+   ],
+   "model_name": "htdemucs"
+  },
+  "_meta": {
+   "title": "Z3 STEMS: Demucs htdemucs (out0 vocals, out1 bass, out2 drums, out3 other)"
+  }
+ },
+ "1002": {
+  "class_type": "SaveAudioAdvanced",
+  "inputs": {
+   "audio": [
+    "1001",
+    0
+   ],
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-stem-vocals",
+   "format": "flac"
+  },
+  "_meta": {
+   "title": "Z3 OUTPUT stem vocals (flac)"
+  }
+ },
+ "1003": {
+  "class_type": "SaveAudioAdvanced",
+  "inputs": {
+   "audio": [
+    "1001",
+    1
+   ],
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-stem-bass",
+   "format": "flac"
+  },
+  "_meta": {
+   "title": "Z3 OUTPUT stem bass (flac)"
+  }
+ },
+ "1004": {
+  "class_type": "SaveAudioAdvanced",
+  "inputs": {
+   "audio": [
+    "1001",
+    2
+   ],
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-stem-drums",
+   "format": "flac"
+  },
+  "_meta": {
+   "title": "Z3 OUTPUT stem drums (flac)"
+  }
+ },
+ "1005": {
+  "class_type": "SaveAudioAdvanced",
+  "inputs": {
+   "audio": [
+    "1001",
+    3
+   ],
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-stem-other",
+   "format": "flac"
+  },
+  "_meta": {
+   "title": "Z3 OUTPUT stem other (flac)"
+  }
+ },
+ "1006": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    0
+   ],
+   "start_index": 0.0,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "Z3 slice vocals w1"
+  }
+ },
+ "1007": {
+  "class_type": "AudioLoudnessMeter",
+  "inputs": {
+   "audio": [
+    "1006",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 LUFS vocals w1"
+  }
+ },
+ "1008": {
+  "class_type": "StringConcatenate",
+  "inputs": {
+   "string_a": "vocals stem, window 1 (0.00-10.12 s): ",
+   "string_b": [
+    "1007",
+    0
+   ],
+   "delimiter": ""
+  },
+  "_meta": {
+   "title": "Z3 label vocals w1"
+  }
+ },
+ "1009": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    0
+   ],
+   "start_index": 10.125,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "Z3 slice vocals w2"
+  }
+ },
+ "1010": {
+  "class_type": "AudioLoudnessMeter",
+  "inputs": {
+   "audio": [
+    "1009",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 LUFS vocals w2"
+  }
+ },
+ "1011": {
+  "class_type": "StringConcatenate",
+  "inputs": {
+   "string_a": "vocals stem, window 2 (10.12-20.25 s): ",
+   "string_b": [
+    "1010",
+    0
+   ],
+   "delimiter": ""
+  },
+  "_meta": {
+   "title": "Z3 label vocals w2"
+  }
+ },
+ "1012": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    0
+   ],
+   "start_index": 20.25,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "Z3 slice vocals w3"
+  }
+ },
+ "1013": {
+  "class_type": "AudioLoudnessMeter",
+  "inputs": {
+   "audio": [
+    "1012",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 LUFS vocals w3"
+  }
+ },
+ "1014": {
+  "class_type": "StringConcatenate",
+  "inputs": {
+   "string_a": "vocals stem, window 3 (20.25-30.38 s): ",
+   "string_b": [
+    "1013",
+    0
+   ],
+   "delimiter": ""
+  },
+  "_meta": {
+   "title": "Z3 label vocals w3"
+  }
+ },
+ "1015": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    1
+   ],
+   "start_index": 0.0,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "Z3 slice bass w1"
+  }
+ },
+ "1016": {
+  "class_type": "AudioLoudnessMeter",
+  "inputs": {
+   "audio": [
+    "1015",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 LUFS bass w1"
+  }
+ },
+ "1017": {
+  "class_type": "StringConcatenate",
+  "inputs": {
+   "string_a": "bass stem, window 1 (0.00-10.12 s): ",
+   "string_b": [
+    "1016",
+    0
+   ],
+   "delimiter": ""
+  },
+  "_meta": {
+   "title": "Z3 label bass w1"
+  }
+ },
+ "1018": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    1
+   ],
+   "start_index": 10.125,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "Z3 slice bass w2"
+  }
+ },
+ "1019": {
+  "class_type": "AudioLoudnessMeter",
+  "inputs": {
+   "audio": [
+    "1018",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 LUFS bass w2"
+  }
+ },
+ "1020": {
+  "class_type": "StringConcatenate",
+  "inputs": {
+   "string_a": "bass stem, window 2 (10.12-20.25 s): ",
+   "string_b": [
+    "1019",
+    0
+   ],
+   "delimiter": ""
+  },
+  "_meta": {
+   "title": "Z3 label bass w2"
+  }
+ },
+ "1021": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    1
+   ],
+   "start_index": 20.25,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "Z3 slice bass w3"
+  }
+ },
+ "1022": {
+  "class_type": "AudioLoudnessMeter",
+  "inputs": {
+   "audio": [
+    "1021",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 LUFS bass w3"
+  }
+ },
+ "1023": {
+  "class_type": "StringConcatenate",
+  "inputs": {
+   "string_a": "bass stem, window 3 (20.25-30.38 s): ",
+   "string_b": [
+    "1022",
+    0
+   ],
+   "delimiter": ""
+  },
+  "_meta": {
+   "title": "Z3 label bass w3"
+  }
+ },
+ "1024": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    2
+   ],
+   "start_index": 0.0,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "Z3 slice drums w1"
+  }
+ },
+ "1025": {
+  "class_type": "AudioLoudnessMeter",
+  "inputs": {
+   "audio": [
+    "1024",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 LUFS drums w1"
+  }
+ },
+ "1026": {
+  "class_type": "StringConcatenate",
+  "inputs": {
+   "string_a": "drums stem, window 1 (0.00-10.12 s): ",
+   "string_b": [
+    "1025",
+    0
+   ],
+   "delimiter": ""
+  },
+  "_meta": {
+   "title": "Z3 label drums w1"
+  }
+ },
+ "1027": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    2
+   ],
+   "start_index": 10.125,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "Z3 slice drums w2"
+  }
+ },
+ "1028": {
+  "class_type": "AudioLoudnessMeter",
+  "inputs": {
+   "audio": [
+    "1027",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 LUFS drums w2"
+  }
+ },
+ "1029": {
+  "class_type": "StringConcatenate",
+  "inputs": {
+   "string_a": "drums stem, window 2 (10.12-20.25 s): ",
+   "string_b": [
+    "1028",
+    0
+   ],
+   "delimiter": ""
+  },
+  "_meta": {
+   "title": "Z3 label drums w2"
+  }
+ },
+ "1030": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    2
+   ],
+   "start_index": 20.25,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "Z3 slice drums w3"
+  }
+ },
+ "1031": {
+  "class_type": "AudioLoudnessMeter",
+  "inputs": {
+   "audio": [
+    "1030",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 LUFS drums w3"
+  }
+ },
+ "1032": {
+  "class_type": "StringConcatenate",
+  "inputs": {
+   "string_a": "drums stem, window 3 (20.25-30.38 s): ",
+   "string_b": [
+    "1031",
+    0
+   ],
+   "delimiter": ""
+  },
+  "_meta": {
+   "title": "Z3 label drums w3"
+  }
+ },
+ "1033": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    3
+   ],
+   "start_index": 0.0,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "Z3 slice other w1"
+  }
+ },
+ "1034": {
+  "class_type": "AudioLoudnessMeter",
+  "inputs": {
+   "audio": [
+    "1033",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 LUFS other w1"
+  }
+ },
+ "1035": {
+  "class_type": "StringConcatenate",
+  "inputs": {
+   "string_a": "other stem, window 1 (0.00-10.12 s): ",
+   "string_b": [
+    "1034",
+    0
+   ],
+   "delimiter": ""
+  },
+  "_meta": {
+   "title": "Z3 label other w1"
+  }
+ },
+ "1036": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    3
+   ],
+   "start_index": 10.125,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "Z3 slice other w2"
+  }
+ },
+ "1037": {
+  "class_type": "AudioLoudnessMeter",
+  "inputs": {
+   "audio": [
+    "1036",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 LUFS other w2"
+  }
+ },
+ "1038": {
+  "class_type": "StringConcatenate",
+  "inputs": {
+   "string_a": "other stem, window 2 (10.12-20.25 s): ",
+   "string_b": [
+    "1037",
+    0
+   ],
+   "delimiter": ""
+  },
+  "_meta": {
+   "title": "Z3 label other w2"
+  }
+ },
+ "1039": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    3
+   ],
+   "start_index": 20.25,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "Z3 slice other w3"
+  }
+ },
+ "1040": {
+  "class_type": "AudioLoudnessMeter",
+  "inputs": {
+   "audio": [
+    "1039",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 LUFS other w3"
+  }
+ },
+ "1041": {
+  "class_type": "StringConcatenate",
+  "inputs": {
+   "string_a": "other stem, window 3 (20.25-30.38 s): ",
+   "string_b": [
+    "1040",
+    0
+   ],
+   "delimiter": ""
+  },
+  "_meta": {
+   "title": "Z3 label other w3"
+  }
+ },
+ "1042": {
+  "class_type": "JoinStringMulti",
+  "inputs": {
+   "inputcount": 12,
+   "delimiter": "\n",
+   "return_list": false,
+   "string_1": [
+    "1008",
+    0
+   ],
+   "string_2": [
+    "1011",
+    0
+   ],
+   "string_3": [
+    "1014",
+    0
+   ],
+   "string_4": [
+    "1017",
+    0
+   ],
+   "string_5": [
+    "1020",
+    0
+   ],
+   "string_6": [
+    "1023",
+    0
+   ],
+   "string_7": [
+    "1026",
+    0
+   ],
+   "string_8": [
+    "1029",
+    0
+   ],
+   "string_9": [
+    "1032",
+    0
+   ],
+   "string_10": [
+    "1035",
+    0
+   ],
+   "string_11": [
+    "1038",
+    0
+   ],
+   "string_12": [
+    "1041",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 LOUDNESS per stem per window (text)"
+  }
+ },
+ "1043": {
+  "class_type": "PrimitiveStringMultiline",
+  "inputs": {
+   "value": "Listen to this music clip (about 30 seconds). List every instrument and every voice you can hear.\nAnswer with one line per sound source and nothing else, in exactly this format:\nSOURCE: <plain name> | WHEN: <time ranges in seconds, for example 0-10, 18-30> | CONFIDENCE: <high, medium or low>\nUse common names such as lead vocals, backing vocals, drum kit, electric bass, upright bass, acoustic guitar, electric guitar, piano, organ, synth, trumpet, saxophone, trombone, strings, violin, cello, harmonica, banjo, percussion.\nName only sounds you actually hear in this clip."
+  },
+  "_meta": {
+   "title": "TEXT: Gemini instrument-ID prompt (song)"
+  }
+ },
+ "1044": {
+  "class_type": "GeminiNodeV3",
+  "inputs": {
+   "model": "Gemini 3.1 Pro",
+   "model.prompt": [
+    "1043",
+    0
+   ],
+   "model.thinking_level": "HIGH",
+   "model.max_output_tokens": 32768,
+   "model.seed": 42,
+   "model.system_prompt": "",
+   "model.temperature": 0.2,
+   "model.top_p": 0.95,
+   "model.audio.audio_1": [
+    "8",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z3 INSTRUMENT ID: Gemini listens to the song"
+  }
+ },
+ "1045": {
+  "class_type": "PrimitiveStringMultiline",
+  "inputs": {
+   "value": "This audio is the 'other' stem from a Demucs source separation of a song: everything except the vocals, drums and bass.\nList every instrument you can hear in it. Answer with one line per instrument and nothing else, in exactly this format:\nSOURCE: <plain name> | WHEN: <time ranges in seconds, for example 0-10, 18-30> | CONFIDENCE: <high, medium or low>\nName only sounds you actually hear in this clip. If it is only faint bleed from other instruments, answer exactly: SOURCE: bleed only | WHEN: 0-30 | CONFIDENCE: high"
+  },
+  "_meta": {
+   "title": "TEXT: Gemini instrument-ID prompt (other stem)"
+  }
+ },
+ "1046": {
+  "class_type": "GeminiNodeV3",
+  "inputs": {
+   "model": "Gemini 3.1 Pro",
+   "model.prompt": [
+    "1045",
+    0
+   ],
+   "model.thinking_level": "HIGH",
+   "model.max_output_tokens": 32768,
+   "model.seed": 42,
+   "model.system_prompt": "",
+   "model.temperature": 0.2,
+   "model.top_p": 0.95,
+   "model.audio.audio_1": [
+    "1001",
+    3
+   ]
+  },
+  "_meta": {
+   "title": "Z3 INSTRUMENT ID: Gemini listens to the other stem"
+  }
+ },
+ "1047": {
+  "class_type": "PrimitiveStringMultiline",
+  "inputs": {
+   "value": "Look at the picture (the album cover) and read the analysis of the song below.\n\nSONG ANALYSIS\nInstruments heard in the full song (from a listening model):\n"
+  },
+  "_meta": {
+   "title": "TEXT: auto-prompt header"
+  }
+ },
+ "1048": {
+  "class_type": "PrimitiveStringMultiline",
+  "inputs": {
+   "value": "\n\nInstruments heard in the Demucs 'other' stem (everything except vocals, drums, bass):\n"
+  },
+  "_meta": {
+   "title": "TEXT: other-stem header"
+  }
+ },
+ "1049": {
+  "class_type": "PrimitiveStringMultiline",
+  "inputs": {
+   "value": "\n\nLoudness of each Demucs stem per 10 second window (LUFS; quieter than about -40 LUFS means that stem is essentially silent there):\n"
+  },
+  "_meta": {
+   "title": "TEXT: loudness header"
+  }
+ },
+ "1050": {
+  "class_type": "PrimitiveStringMultiline",
+  "inputs": {
+   "value": "\n\nHOW TO MATCH\n- Each instrument family maps to a stem: voice -> vocals stem (<Audio 1>); drum kit and drums -> drums stem (<Audio 2>); bass guitar, upright bass, double bass -> bass stem; every other instrument (guitars, keys, piano, horns, strings, harmonica, percussion other than the kit) -> other stem.\n- Listening models often confuse instruments inside one family, so match by FAMILY: horns (trumpet, cornet, saxophone, trombone, clarinet, brass, horn section); guitars (acoustic, electric, steel, banjo, mandolin, ukulele); keys (piano, organ, synth, synthesizer, keyboard, harmonium); bowed strings (violin, fiddle, viola, cello, string section); basses (electric bass, upright bass, double bass). A visible trumpeter plays a heard saxophone or horn line, and so on.\n- An instrument counts as HEARD when the listening lists name it or another member of its family AND its stem is louder than about -40 LUFS in at least one window. Trust the loudness numbers over the listening lists when they disagree.\n- A visible player whose instrument is HEARD plays along with that sound (name the sound: the drums, the bass notes, the trumpet line, the guitar chords, and so on).\n- A visible player whose instrument is NOT heard moves only to the beat: their hands keep a gentle, steady pulse on the instrument with each drum beat.\n- A heard instrument with no visible player goes only into the MUSIC slot and the HEARD_NO_PLAYER list; it is never given to a person.\n- Singer: if the vocals stem is louder than about -40 LUFS in some window, choose exactly one singer: the person at a microphone; if no microphone is visible and the cover shows exactly one performer whose mouth is free, that performer sings; if no microphone is visible and the cover shows two or more performers, choose none. A performer with a wind instrument at the lips is never the singer. If vocals are silent in every window, choose none.\n\nFILL THESE SLOTS\n[MOOD]\ntwo or three capital words for the feel, like WARM SWING or SOFT FOLK GLOW\n[/MOOD]\n[STYLE]\nthe art style and setting as one noun phrase starting with \"a\" or \"an\", like: an etched-print sepia illustration of a 1940s club stage\n[/STYLE]\n[SHOT]\none noun phrase for what the cover shows, like: a four-man band under five stage lamps\n[/SHOT]\n[PALETTE]\nthe colours and light of the cover as a short phrase, like: sepia etched print, warm cream light cones on a dark stage\n[/PALETTE]\n[SUBJECTS]\none line per visible person, left to right, in this form:\n<Subject 1> is THE ROLE: position in the frame, two or three visible details of looks and clothes, the instrument or microphone they hold.\n(ROLE is a short capitalised job name such as SINGER, BASSIST, DRUMMER, GUITARIST, TRUMPETER, PIANIST; the singer, if any, is called THE SINGER.)\nthen one last line for the scenery:\n<Subject N> is THE WORLD: the visible lights, scenery and objects, including any instrument that nobody plays.\n[/SUBJECTS]\n[WORLD_MOTION]\nfour to seven slow, subtle motions for the visible scenery only, separated by semicolons, like: the five stage lamps glow and pulse slowly; the heavy curtains sway slowly; the cymbals shimmer softly\n[/WORLD_MOTION]\n[SINGER_LINE]\nIf there is a singer, write exactly this sentence with the pronoun fixed to match the person:\nTHE SINGER is the one singer and sings <Audio 1>: lips on each sung syllable, lips and jaw shaping each word, mouth opening moderately, restrained, his head drifting slowly in small turns on held notes, shoulders still; between lines the lips rest together in a smile. Everyone else keeps lips together.\nIf there is no singer, write exactly this sentence:\n<Audio 1> is the voice of the song, heard from off the cover; every person on the cover keeps lips together in a calm, happy expression the whole time.\n[/SINGER_LINE]\n[PLAYERS]\none line for each visible person other than the singer, in this form (fit the hands to the real instrument):\nTHE ROLE: on each <sound of their instrument> <the hand> <the playing motion>; <the other hand> <a steady supporting motion>; head calm, shoulders still, the motion in the hands.\nFor the drummer use: on each kick of <Audio 2> his foot presses the kick pedal; on each snare his right stick lands on the snare; on every first beat his right stick taps the cymbal; head calm, his motion in his hands and foot.\nFor a player whose instrument is not heard: THE ROLE: the hands keep a gentle, steady pulse on the instrument with each drum beat; head calm, shoulders still.\nIf the singer is the only person, write one line about the singer's free hand, like: THE SINGER's free hand lifts a little on each new line and settles.\n[/PLAYERS]\n[WORLD_ANSWER]\nthree or four links between the music and the scenery, separated by semicolons, like: on each kick the five lamps brighten a little and settle; on each snare the cymbals shimmer with light; with the bass notes the curtains sway slowly\n[/WORLD_ANSWER]\n[SOUNDSCAPE]\nthe room sound of this setting as a short phrase, like: a smoky 1940s club, glasses clinking, a happy crowd.\n[/SOUNDSCAPE]\n[MUSIC]\nthe genre and tempo feel, then one short sentence per HEARD instrument, like: a swinging rock-and-roll anthem. The drums driving. The plucked upright bass. The trumpet line. The voice.\n[/MUSIC]\n[INSTRUMENTS]\none line per heard sound and one line per visible player, in this form:\nHEARD <instrument> | stem <vocals/drums/bass/other> | windows <1,2,3> | player <ROLE or (heard, no player on the cover)>\nPLAYER <ROLE> | instrument <visible instrument> | <plays its own sound (stem name) or moves to the beat only (instrument unheard)>\n[/INSTRUMENTS]\n[HEARD_NO_PLAYER]\na comma separated list of heard instruments that have no visible player, each followed by \"(heard, no player on the cover)\"; if every heard instrument has a player, write: every heard instrument has a player on the cover\n[/HEARD_NO_PLAYER]"
+  },
+  "_meta": {
+   "title": "TEXT: matching rules + slot instructions"
+  }
+ },
+ "1051": {
+  "class_type": "JoinStringMulti",
+  "inputs": {
+   "inputcount": 7,
+   "delimiter": "",
+   "return_list": false,
+   "string_1": [
+    "1047",
+    0
+   ],
+   "string_2": [
+    "1044",
+    0
+   ],
+   "string_3": [
+    "1048",
+    0
+   ],
+   "string_4": [
+    "1046",
+    0
+   ],
+   "string_5": [
+    "1049",
+    0
+   ],
+   "string_6": [
+    "1042",
+    0
+   ],
+   "string_7": [
+    "1050",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z2 AUTO-PROMPT request (cover rules + heard lists + loudness)"
+  }
+ },
+ "1052": {
+  "class_type": "PrimitiveStringMultiline",
+  "inputs": {
+   "value": "You fill the slots of a FIXED video-prompt template for MiniMax H3, which animates an album cover into a 30 second music performance with a locked-off camera.\nHard rules:\n1. Describe only what is visible in the picture. Count the people carefully. Every person you name must be clearly visible; every instrument you name must be clearly visible in the picture. Empty instruments with nobody playing them are scenery, never a player.\n2. Exactly one singer or none (rule for choosing below).\n3. Write every slot in positive wording. The slot text must contain zero negation words: avoid the words no, not, never, nothing, without, none, nor, neither, nobody, cannot, and every contraction ending in n't. Say what happens, never what is absent.\n4. Use plain English, present tense, short clauses separated by semicolons.\n5. Output exactly the tagged blocks requested, each opening tag and closing tag on its own line, and nothing outside them."
+  },
+  "_meta": {
+   "title": "TEXT: auto-prompt system rules"
+  }
+ },
+ "1053": {
+  "class_type": "GeminiNodeV3",
+  "inputs": {
+   "model": "Gemini 3.1 Pro",
+   "model.prompt": [
+    "1051",
+    0
+   ],
+   "model.thinking_level": "HIGH",
+   "model.max_output_tokens": 32768,
+   "model.seed": 42,
+   "model.system_prompt": [
+    "1052",
+    0
+   ],
+   "model.temperature": 0.2,
+   "model.top_p": 0.95,
+   "model.images.image_1": [
+    "18",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z2 AUTO-PROMPT: Gemini reads the cover + song analysis, fills slots"
+  }
+ },
+ "1054": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1053",
+    0
+   ],
+   "regex_pattern": "^.*?\\[MOOD\\]\\s*(.*?)\\s*\\[/MOOD\\].*$",
+   "replace": "\\1",
+   "case_insensitive": false,
+   "multiline": false,
+   "dotall": true,
+   "count": 1
+  },
+  "_meta": {
+   "title": "Z2 slot extract MOOD"
+  }
+ },
+ "1055": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1053",
+    0
+   ],
+   "regex_pattern": "^.*?\\[STYLE\\]\\s*(.*?)\\s*\\[/STYLE\\].*$",
+   "replace": "\\1",
+   "case_insensitive": false,
+   "multiline": false,
+   "dotall": true,
+   "count": 1
+  },
+  "_meta": {
+   "title": "Z2 slot extract STYLE"
+  }
+ },
+ "1056": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1053",
+    0
+   ],
+   "regex_pattern": "^.*?\\[SHOT\\]\\s*(.*?)\\s*\\[/SHOT\\].*$",
+   "replace": "\\1",
+   "case_insensitive": false,
+   "multiline": false,
+   "dotall": true,
+   "count": 1
+  },
+  "_meta": {
+   "title": "Z2 slot extract SHOT"
+  }
+ },
+ "1057": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1053",
+    0
+   ],
+   "regex_pattern": "^.*?\\[PALETTE\\]\\s*(.*?)\\s*\\[/PALETTE\\].*$",
+   "replace": "\\1",
+   "case_insensitive": false,
+   "multiline": false,
+   "dotall": true,
+   "count": 1
+  },
+  "_meta": {
+   "title": "Z2 slot extract PALETTE"
+  }
+ },
+ "1058": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1053",
+    0
+   ],
+   "regex_pattern": "^.*?\\[SUBJECTS\\]\\s*(.*?)\\s*\\[/SUBJECTS\\].*$",
+   "replace": "\\1",
+   "case_insensitive": false,
+   "multiline": false,
+   "dotall": true,
+   "count": 1
+  },
+  "_meta": {
+   "title": "Z2 slot extract SUBJECTS"
+  }
+ },
+ "1059": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1053",
+    0
+   ],
+   "regex_pattern": "^.*?\\[WORLD_MOTION\\]\\s*(.*?)\\s*\\[/WORLD_MOTION\\].*$",
+   "replace": "\\1",
+   "case_insensitive": false,
+   "multiline": false,
+   "dotall": true,
+   "count": 1
+  },
+  "_meta": {
+   "title": "Z2 slot extract WORLD_MOTION"
+  }
+ },
+ "1060": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1053",
+    0
+   ],
+   "regex_pattern": "^.*?\\[SINGER_LINE\\]\\s*(.*?)\\s*\\[/SINGER_LINE\\].*$",
+   "replace": "\\1",
+   "case_insensitive": false,
+   "multiline": false,
+   "dotall": true,
+   "count": 1
+  },
+  "_meta": {
+   "title": "Z2 slot extract SINGER_LINE"
+  }
+ },
+ "1061": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1053",
+    0
+   ],
+   "regex_pattern": "^.*?\\[PLAYERS\\]\\s*(.*?)\\s*\\[/PLAYERS\\].*$",
+   "replace": "\\1",
+   "case_insensitive": false,
+   "multiline": false,
+   "dotall": true,
+   "count": 1
+  },
+  "_meta": {
+   "title": "Z2 slot extract PLAYERS"
+  }
+ },
+ "1062": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1053",
+    0
+   ],
+   "regex_pattern": "^.*?\\[WORLD_ANSWER\\]\\s*(.*?)\\s*\\[/WORLD_ANSWER\\].*$",
+   "replace": "\\1",
+   "case_insensitive": false,
+   "multiline": false,
+   "dotall": true,
+   "count": 1
+  },
+  "_meta": {
+   "title": "Z2 slot extract WORLD_ANSWER"
+  }
+ },
+ "1063": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1053",
+    0
+   ],
+   "regex_pattern": "^.*?\\[SOUNDSCAPE\\]\\s*(.*?)\\s*\\[/SOUNDSCAPE\\].*$",
+   "replace": "\\1",
+   "case_insensitive": false,
+   "multiline": false,
+   "dotall": true,
+   "count": 1
+  },
+  "_meta": {
+   "title": "Z2 slot extract SOUNDSCAPE"
+  }
+ },
+ "1064": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1053",
+    0
+   ],
+   "regex_pattern": "^.*?\\[MUSIC\\]\\s*(.*?)\\s*\\[/MUSIC\\].*$",
+   "replace": "\\1",
+   "case_insensitive": false,
+   "multiline": false,
+   "dotall": true,
+   "count": 1
+  },
+  "_meta": {
+   "title": "Z2 slot extract MUSIC"
+  }
+ },
+ "1065": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1053",
+    0
+   ],
+   "regex_pattern": "^.*?\\[INSTRUMENTS\\]\\s*(.*?)\\s*\\[/INSTRUMENTS\\].*$",
+   "replace": "\\1",
+   "case_insensitive": false,
+   "multiline": false,
+   "dotall": true,
+   "count": 1
+  },
+  "_meta": {
+   "title": "Z2 slot extract INSTRUMENTS"
+  }
+ },
+ "1066": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1053",
+    0
+   ],
+   "regex_pattern": "^.*?\\[HEARD_NO_PLAYER\\]\\s*(.*?)\\s*\\[/HEARD_NO_PLAYER\\].*$",
+   "replace": "\\1",
+   "case_insensitive": false,
+   "multiline": false,
+   "dotall": true,
+   "count": 1
+  },
+  "_meta": {
+   "title": "Z2 slot extract HEARD_NO_PLAYER"
+  }
+ },
+ "1067": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": "subject_definitions:\n{SUBJECTS}\n{PICLINE}\n\nsummary:\n{MOOD}. The target video is one continuous locked-off shot, {SHOT}, in {STYLE}, window {WINDOW_N} of 3 of a 30 second performance. <Audio 1> is the vocal line of the song, <Audio 2> is the drums; with the full song they drive every movement, every bit of audio in order. A warm, joyful, restrained performance: heads calm, shoulders still, each player's motion limited to the hands on the instrument on its beats; the world moves gently and slowly with the music while the light and colours stay as on the cover. Locked-off camera, one continuous take.\n\nretention_analysis:\nEvery person keeps the same face, hair, clothes, instrument and spot from the first frame to the last; every object keeps its shape and place; the lighting, brightness and colours of the cover hold steady from the first frame to the last: {PALETTE}; the palette and the art style stay exactly as on the cover, {STYLE}. The camera stays locked at one framing with every person framed exactly as on the cover, one continuous take from the first frame to the last; every body holds its spot and posture, heads calm, shoulders still.\n\ndetailed_description:\nThe target video is {STYLE}, a locked-off camera. Laws of this world: the camera holds one locked framing for the whole window, every person framed exactly as on the cover; everything on the cover is alive and moving, slow and subtle between the hits: {WORLD_MOTION}; hands have five fingers resting on real instruments; each performer's motion stays in the hands on the instrument, each with a small distinct touch; every person holds a calm, steady posture, heads calm, shoulders still, breathing and blinking softly, each head drifting slowly and slightly.\n{SINGER_LINE}\n{PLAYERS}\nThe world answers the music: {WORLD_ANSWER}\n{ARC}\n\noverall_soundscape:\n{SOUNDSCAPE}\n\nnon_diegetic_music:\n{MUSIC}",
+   "find": "{MOOD}",
+   "replace": [
+    "1054",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z2 FIXED TEMPLATE (v4 structure) + fill MOOD"
+  }
+ },
+ "1068": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1067",
+    0
+   ],
+   "find": "{STYLE}",
+   "replace": [
+    "1055",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z2 template fill STYLE"
+  }
+ },
+ "1069": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1068",
+    0
+   ],
+   "find": "{SHOT}",
+   "replace": [
+    "1056",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z2 template fill SHOT"
+  }
+ },
+ "1070": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1069",
+    0
+   ],
+   "find": "{PALETTE}",
+   "replace": [
+    "1057",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z2 template fill PALETTE"
+  }
+ },
+ "1071": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1070",
+    0
+   ],
+   "find": "{SUBJECTS}",
+   "replace": [
+    "1058",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z2 template fill SUBJECTS"
+  }
+ },
+ "1072": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1071",
+    0
+   ],
+   "find": "{WORLD_MOTION}",
+   "replace": [
+    "1059",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z2 template fill WORLD_MOTION"
+  }
+ },
+ "1073": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1072",
+    0
+   ],
+   "find": "{SINGER_LINE}",
+   "replace": [
+    "1060",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z2 template fill SINGER_LINE"
+  }
+ },
+ "1074": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1073",
+    0
+   ],
+   "find": "{PLAYERS}",
+   "replace": [
+    "1061",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z2 template fill PLAYERS"
+  }
+ },
+ "1075": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1074",
+    0
+   ],
+   "find": "{WORLD_ANSWER}",
+   "replace": [
+    "1062",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z2 template fill WORLD_ANSWER"
+  }
+ },
+ "1076": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1075",
+    0
+   ],
+   "find": "{SOUNDSCAPE}",
+   "replace": [
+    "1063",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z2 template fill SOUNDSCAPE"
+  }
+ },
+ "1077": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1076",
+    0
+   ],
+   "find": "{MUSIC}",
+   "replace": [
+    "1064",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z2 template fill MUSIC"
+  }
+ },
+ "1078": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1077",
+    0
+   ],
+   "regex_pattern": "[^\\n.;,:]*\\b(?:no|not|never|nothing|without|none|nor|neither|nobody|cannot|\\w+n't)\\b[^\\n.;,:]*",
+   "replace": "",
+   "case_insensitive": true,
+   "multiline": false,
+   "dotall": false,
+   "count": 0
+  },
+  "_meta": {
+   "title": "Z2 CLEANUP drop clauses with negation words"
+  }
+ },
+ "1079": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1078",
+    0
+   ],
+   "regex_pattern": "([;,:])\\s*(?=[;,.:])",
+   "replace": "",
+   "case_insensitive": true,
+   "multiline": false,
+   "dotall": false,
+   "count": 0
+  },
+  "_meta": {
+   "title": "Z2 CLEANUP tidy punctuation"
+  }
+ },
+ "1080": {
+  "class_type": "RegexReplace",
+  "inputs": {
+   "string": [
+    "1079",
+    0
+   ],
+   "regex_pattern": "[ \\t]{2,}",
+   "replace": " ",
+   "case_insensitive": true,
+   "multiline": false,
+   "dotall": false,
+   "count": 0
+  },
+  "_meta": {
+   "title": "Z2 CLEANUP tidy spaces"
+  }
+ },
+ "1081": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1080",
+    0
+   ],
+   "find": "{WINDOW_N}",
+   "replace": "1"
+  },
+  "_meta": {
+   "title": "Z2 window 1 WINDOW_N"
+  }
+ },
+ "1082": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1081",
+    0
+   ],
+   "find": "{PICLINE}",
+   "replace": "<Picture 1> is the cover and the first frame of this window."
+  },
+  "_meta": {
+   "title": "Z2 window 1 PICLINE"
+  }
+ },
+ "1083": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1082",
+    0
+   ],
+   "find": "{ARC}",
+   "replace": "The window builds gently: the hands play a little fuller bar by bar, the light and colours steady as on the cover."
+  },
+  "_meta": {
+   "title": "Z2 window 1 ARC (prompt W1 out)"
+  }
+ },
+ "1084": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1080",
+    0
+   ],
+   "find": "{WINDOW_N}",
+   "replace": "2"
+  },
+  "_meta": {
+   "title": "Z2 window 2 WINDOW_N"
+  }
+ },
+ "1085": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1084",
+    0
+   ],
+   "find": "{PICLINE}",
+   "replace": "<Picture 1> is the cover. This window continues exactly from the last frame of the previous window, the same people, clothes, framing and light."
+  },
+  "_meta": {
+   "title": "Z2 window 2 PICLINE"
+  }
+ },
+ "1086": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1085",
+    0
+   ],
+   "find": "{ARC}",
+   "replace": "The peak: the hands play fullest on the instruments, heads calm, shoulders still, the world moving gently with the beat, the light and colours steady as on the cover."
+  },
+  "_meta": {
+   "title": "Z2 window 2 ARC (prompt W2 out)"
+  }
+ },
+ "1087": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1080",
+    0
+   ],
+   "find": "{WINDOW_N}",
+   "replace": "3"
+  },
+  "_meta": {
+   "title": "Z2 window 3 WINDOW_N"
+  }
+ },
+ "1088": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1087",
+    0
+   ],
+   "find": "{PICLINE}",
+   "replace": "<Picture 1> is the cover. This window continues exactly from the last frame of the previous window, the same people, clothes, framing and light."
+  },
+  "_meta": {
+   "title": "Z2 window 3 PICLINE"
+  }
+ },
+ "1089": {
+  "class_type": "StringReplace",
+  "inputs": {
+   "string": [
+    "1088",
+    0
+   ],
+   "find": "{ARC}",
+   "replace": "The finale: the hands play full in the first bars, then everyone eases into the last notes, the light and colours as on the cover."
+  },
+  "_meta": {
+   "title": "Z2 window 3 ARC (prompt W3 out)"
+  }
+ },
+ "1090": {
+  "class_type": "PreviewAny",
+  "inputs": {
+   "source": [
+    "1044",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "OUTPUT TEXT: instruments heard in the song (Gemini, with times)"
+  }
+ },
+ "1091": {
+  "class_type": "PreviewAny",
+  "inputs": {
+   "source": [
+    "1065",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "OUTPUT TEXT: heard vs cover (who plays what, who moves to the beat)"
+  }
+ },
+ "1092": {
+  "class_type": "PreviewAny",
+  "inputs": {
+   "source": [
+    "1066",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "OUTPUT TEXT: heard, no player on the cover"
+  }
+ },
+ "1093": {
+  "class_type": "PreviewAny",
+  "inputs": {
+   "source": [
+    "1042",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "OUTPUT TEXT: stem loudness per 10 s window (LUFS cross-check)"
+  }
+ },
+ "1094": {
+  "class_type": "SaveText",
+  "inputs": {
+   "text": [
+    "1044",
+    0
+   ],
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-instruments-heard",
+   "format": "txt"
+  },
+  "_meta": {
+   "title": "OUTPUT FILE: instruments-heard.txt"
+  }
+ },
+ "1095": {
+  "class_type": "SaveText",
+  "inputs": {
+   "text": [
+    "1046",
+    0
+   ],
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-other-stem-heard",
+   "format": "txt"
+  },
+  "_meta": {
+   "title": "OUTPUT FILE: other-stem-heard.txt"
+  }
+ },
+ "1096": {
+  "class_type": "SaveText",
+  "inputs": {
+   "text": [
+    "1042",
+    0
+   ],
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-loudness",
+   "format": "txt"
+  },
+  "_meta": {
+   "title": "OUTPUT FILE: loudness.txt"
+  }
+ },
+ "1097": {
+  "class_type": "SaveText",
+  "inputs": {
+   "text": [
+    "1065",
+    0
+   ],
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-match",
+   "format": "txt"
+  },
+  "_meta": {
+   "title": "OUTPUT FILE: match.txt"
+  }
+ },
+ "1098": {
+  "class_type": "SaveText",
+  "inputs": {
+   "text": [
+    "1066",
+    0
+   ],
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-heard-no-player",
+   "format": "txt"
+  },
+  "_meta": {
+   "title": "OUTPUT FILE: heard-no-player.txt"
+  }
+ },
+ "1099": {
+  "class_type": "SaveText",
+  "inputs": {
+   "text": [
+    "1053",
+    0
+   ],
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-llm-raw",
+   "format": "txt"
+  },
+  "_meta": {
+   "title": "OUTPUT FILE: llm-raw.txt"
+  }
+ },
+ "1100": {
+  "class_type": "SaveText",
+  "inputs": {
+   "text": [
+    "1083",
+    0
+   ],
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-prompt-w1",
+   "format": "txt"
+  },
+  "_meta": {
+   "title": "OUTPUT FILE: prompt-w1.txt"
+  }
+ },
+ "1101": {
+  "class_type": "SaveText",
+  "inputs": {
+   "text": [
+    "1086",
+    0
+   ],
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-prompt-w2",
+   "format": "txt"
+  },
+  "_meta": {
+   "title": "OUTPUT FILE: prompt-w2.txt"
+  }
+ },
+ "1102": {
+  "class_type": "SaveText",
+  "inputs": {
+   "text": [
+    "1089",
+    0
+   ],
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-prompt-w3",
+   "format": "txt"
+  },
+  "_meta": {
+   "title": "OUTPUT FILE: prompt-w3.txt"
+  }
+ },
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+   "weight_dtype": "default"
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | UNET minimax_h3_ref2va int8"
+  }
+ },
+ "3": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen3vl_32b_minimax_h3_bf16.safetensors",
+   "type": "minimax",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | CLIP qwen3vl_32b bf16"
+  }
+ },
+ "4": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | video VAE fp16"
+  }
+ },
+ "5": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | audio VAE fp32"
+  }
+ },
+ "10": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "res_multistep"
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | sampler res_multistep"
+  }
+ },
+ "11": {
+  "class_type": "BasicScheduler",
+  "inputs": {
+   "scheduler": "kl_optimal",
+   "steps": 8,
+   "denoise": 1,
+   "model": [
+    "20",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | scheduler kl_optimal 8 steps"
+  }
+ },
+ "110": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    0
+   ],
+   "start_index": 0.0,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z4 SLICE W1: <Audio 1> 0.000-10.125s"
+  }
+ },
+ "111": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    2
+   ],
+   "start_index": 0.0,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z4 SLICE W1: <Audio 2> 0.000-10.125s"
+  }
+ },
+ "120": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "8",
+    0
+   ],
+   "start_index": 0.0,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z4 SLICE W1: original mix 0.000-10.125s"
+  }
+ },
+ "101": {
+  "class_type": "MiniMaxH3ReferenceToVideo",
+  "inputs": {
+   "prompt": [
+    "1083",
+    0
+   ],
+   "width": 1248,
+   "height": 1248,
+   "length": 243,
+   "ref_image_size": "match",
+   "ref_images.ref_image_0": [
+    "18",
+    0
+   ],
+   "ref_audios.ref_audio_0": [
+    "110",
+    0
+   ],
+   "ref_audios.ref_audio_1": [
+    "111",
+    0
+   ],
+   "clip": [
+    "3",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "audio_vae": [
+    "5",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W1: ref2va 1248x1248 x243f, 2 stem refs, cover = identity anchor"
+  }
+ },
+ "102": {
+  "class_type": "MiniMaxH3AddGuide",
+  "inputs": {
+   "frame_idx": 0,
+   "positive": [
+    "101",
+    0
+   ],
+   "latent": [
+    "101",
+    1
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "audio_vae": [
+    "5",
+    0
+   ],
+   "image": [
+    "18",
+    0
+   ],
+   "audio": [
+    "110",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W1: AddGuide frame 0 = cover, audio = <Audio 1> slice"
+  }
+ },
+ "103": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 210664234423221
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W1: seed 210664234423221"
+  }
+ },
+ "104": {
+  "class_type": "BasicGuider",
+  "inputs": {
+   "model": [
+    "20",
+    0
+   ],
+   "conditioning": [
+    "102",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W1: guider"
+  }
+ },
+ "105": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "103",
+    0
+   ],
+   "guider": [
+    "104",
+    0
+   ],
+   "sampler": [
+    "10",
+    0
+   ],
+   "sigmas": [
+    "11",
+    0
+   ],
+   "latent_image": [
+    "101",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W1: sampler"
+  }
+ },
+ "106": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "105",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W1: decode"
+  }
+ },
+ "109": {
+  "class_type": "GetImageRangeFromBatch",
+  "inputs": {
+   "start_index": 242,
+   "num_frames": 1,
+   "images": [
+    "106",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W1: last frame (242) = next window guide"
+  }
+ },
+ "107": {
+  "class_type": "CreateVideo",
+  "inputs": {
+   "fps": 24,
+   "bit_depth": "auto",
+   "color_space": "sRGB",
+   "codec": "auto",
+   "images": [
+    "106",
+    0
+   ],
+   "audio": [
+    "120",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z7 ASSEMBLE W1: own video 24fps + original mix slice"
+  }
+ },
+ "108": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-30s-w1",
+   "format": "auto",
+   "format.codec": "auto",
+   "codec": "auto",
+   "video": [
+    "107",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z7 OUTPUT W1: genkwando/easy-v1/EASY-v1-30s-w1"
+  }
+ },
+ "210": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    0
+   ],
+   "start_index": 10.125,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z4 SLICE W2: <Audio 1> 10.125-20.250s"
+  }
+ },
+ "211": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    2
+   ],
+   "start_index": 10.125,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z4 SLICE W2: <Audio 2> 10.125-20.250s"
+  }
+ },
+ "220": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "8",
+    0
+   ],
+   "start_index": 10.125,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z4 SLICE W2: original mix 10.125-20.250s"
+  }
+ },
+ "201": {
+  "class_type": "MiniMaxH3ReferenceToVideo",
+  "inputs": {
+   "prompt": [
+    "1086",
+    0
+   ],
+   "width": 1248,
+   "height": 1248,
+   "length": 243,
+   "ref_image_size": "match",
+   "ref_images.ref_image_0": [
+    "18",
+    0
+   ],
+   "ref_audios.ref_audio_0": [
+    "210",
+    0
+   ],
+   "ref_audios.ref_audio_1": [
+    "211",
+    0
+   ],
+   "clip": [
+    "3",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "audio_vae": [
+    "5",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W2: ref2va 1248x1248 x243f, 2 stem refs, cover = identity anchor"
+  }
+ },
+ "202": {
+  "class_type": "MiniMaxH3AddGuide",
+  "inputs": {
+   "frame_idx": 0,
+   "positive": [
+    "201",
+    0
+   ],
+   "latent": [
+    "201",
+    1
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "audio_vae": [
+    "5",
+    0
+   ],
+   "image": [
+    "109",
+    0
+   ],
+   "audio": [
+    "210",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W2: AddGuide frame 0 = W1 last decoded frame (join), audio = <Au"
+  }
+ },
+ "203": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 210664234423221
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W2: seed 210664234423221"
+  }
+ },
+ "204": {
+  "class_type": "BasicGuider",
+  "inputs": {
+   "model": [
+    "20",
+    0
+   ],
+   "conditioning": [
+    "202",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W2: guider"
+  }
+ },
+ "205": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "203",
+    0
+   ],
+   "guider": [
+    "204",
+    0
+   ],
+   "sampler": [
+    "10",
+    0
+   ],
+   "sigmas": [
+    "11",
+    0
+   ],
+   "latent_image": [
+    "201",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W2: sampler"
+  }
+ },
+ "206": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "205",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W2: decode"
+  }
+ },
+ "209": {
+  "class_type": "GetImageRangeFromBatch",
+  "inputs": {
+   "start_index": 242,
+   "num_frames": 1,
+   "images": [
+    "206",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W2: last frame (242) = next window guide"
+  }
+ },
+ "207": {
+  "class_type": "CreateVideo",
+  "inputs": {
+   "fps": 24,
+   "bit_depth": "auto",
+   "color_space": "sRGB",
+   "codec": "auto",
+   "images": [
+    "206",
+    0
+   ],
+   "audio": [
+    "220",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z7 ASSEMBLE W2: own video 24fps + original mix slice"
+  }
+ },
+ "208": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-30s-w2",
+   "format": "auto",
+   "format.codec": "auto",
+   "codec": "auto",
+   "video": [
+    "207",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z7 OUTPUT W2: genkwando/easy-v1/EASY-v1-30s-w2"
+  }
+ },
+ "310": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    0
+   ],
+   "start_index": 20.25,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z4 SLICE W3: <Audio 1> 20.250-30.375s"
+  }
+ },
+ "311": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "1001",
+    2
+   ],
+   "start_index": 20.25,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z4 SLICE W3: <Audio 2> 20.250-30.375s"
+  }
+ },
+ "320": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "8",
+    0
+   ],
+   "start_index": 20.25,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z4 SLICE W3: original mix 20.250-30.375s"
+  }
+ },
+ "301": {
+  "class_type": "MiniMaxH3ReferenceToVideo",
+  "inputs": {
+   "prompt": [
+    "1089",
+    0
+   ],
+   "width": 1248,
+   "height": 1248,
+   "length": 243,
+   "ref_image_size": "match",
+   "ref_images.ref_image_0": [
+    "18",
+    0
+   ],
+   "ref_audios.ref_audio_0": [
+    "310",
+    0
+   ],
+   "ref_audios.ref_audio_1": [
+    "311",
+    0
+   ],
+   "clip": [
+    "3",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "audio_vae": [
+    "5",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W3: ref2va 1248x1248 x243f, 2 stem refs, cover = identity anchor"
+  }
+ },
+ "302": {
+  "class_type": "MiniMaxH3AddGuide",
+  "inputs": {
+   "frame_idx": 0,
+   "positive": [
+    "301",
+    0
+   ],
+   "latent": [
+    "301",
+    1
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "audio_vae": [
+    "5",
+    0
+   ],
+   "image": [
+    "209",
+    0
+   ],
+   "audio": [
+    "310",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W3: AddGuide frame 0 = W2 last decoded frame (join), audio = <Au"
+  }
+ },
+ "303": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 210664234423221
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W3: seed 210664234423221"
+  }
+ },
+ "304": {
+  "class_type": "BasicGuider",
+  "inputs": {
+   "model": [
+    "20",
+    0
+   ],
+   "conditioning": [
+    "302",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W3: guider"
+  }
+ },
+ "305": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "303",
+    0
+   ],
+   "guider": [
+    "304",
+    0
+   ],
+   "sampler": [
+    "10",
+    0
+   ],
+   "sigmas": [
+    "11",
+    0
+   ],
+   "latent_image": [
+    "301",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W3: sampler"
+  }
+ },
+ "306": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "305",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z5 H3 W3: decode"
+  }
+ },
+ "307": {
+  "class_type": "CreateVideo",
+  "inputs": {
+   "fps": 24,
+   "bit_depth": "auto",
+   "color_space": "sRGB",
+   "codec": "auto",
+   "images": [
+    "306",
+    0
+   ],
+   "audio": [
+    "320",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z7 ASSEMBLE W3: own video 24fps + original mix slice"
+  }
+ },
+ "308": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-30s-w3",
+   "format": "auto",
+   "format.codec": "auto",
+   "codec": "auto",
+   "video": [
+    "307",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z7 OUTPUT W3: genkwando/easy-v1/EASY-v1-30s-w3"
+  }
+ },
+ "901": {
+  "class_type": "GetImageRangeFromBatch",
+  "inputs": {
+   "start_index": 1,
+   "num_frames": 242,
+   "images": [
+    "206",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z7 ASSEMBLE: W2 drop first guide frame (1..242)"
+  }
+ },
+ "902": {
+  "class_type": "GetImageRangeFromBatch",
+  "inputs": {
+   "start_index": 1,
+   "num_frames": 242,
+   "images": [
+    "306",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z7 ASSEMBLE: W3 drop first guide frame (1..242)"
+  }
+ },
+ "910": {
+  "class_type": "BatchImagesNode",
+  "inputs": {
+   "images.image0": [
+    "106",
+    0
+   ],
+   "images.image1": [
+    "901",
+    0
+   ],
+   "images.image2": [
+    "902",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z7 ASSEMBLE: concat 3 windows = 727 frames"
+  }
+ },
+ "920": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "8",
+    0
+   ],
+   "start_index": 0.0,
+   "duration": 30.291666666666668
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z4 SLICE: original mix 0.000-30.292s (727 frames)"
+  }
+ },
+ "921": {
+  "class_type": "CreateVideo",
+  "inputs": {
+   "fps": 24,
+   "bit_depth": "auto",
+   "color_space": "sRGB",
+   "codec": "auto",
+   "images": [
+    "910",
+    0
+   ],
+   "audio": [
+    "920",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z7 ASSEMBLE: 727 frames @24fps + original mix"
+  }
+ },
+ "922": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-30s",
+   "format": "auto",
+   "format.codec": "auto",
+   "codec": "auto",
+   "video": [
+    "921",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | Z7 OUTPUT: genkwando/easy-v1/EASY-v1-30s"
+  }
+ },
+ "20": {
+  "class_type": "LoraLoaderModelOnly",
+  "inputs": {
+   "lora_name": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+   "strength_model": 1,
+   "model": [
+    "1",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "EASY v1 (v4 chain) | LoRA turbo_4step_v0.1 (JIM2)"
+  }
+ },
+ "1103": {
+  "class_type": "ColorMatchV2",
+  "inputs": {
+   "image_target": [
+    "106",
+    0
+   ],
+   "image_ref": [
+    "18",
+    0
+   ],
+   "method": "reinhard",
+   "strength": 0.5,
+   "multithread": true
+  },
+  "_meta": {
+   "title": "Z8 COLOUR MATCH W1 to cover (reinhard 0.5, per window)"
+  }
+ },
+ "1104": {
+  "class_type": "ColorMatchV2",
+  "inputs": {
+   "image_target": [
+    "901",
+    0
+   ],
+   "image_ref": [
+    "18",
+    0
+   ],
+   "method": "reinhard",
+   "strength": 0.5,
+   "multithread": true
+  },
+  "_meta": {
+   "title": "Z8 COLOUR MATCH W2 to cover (reinhard 0.5, per window)"
+  }
+ },
+ "1105": {
+  "class_type": "ColorMatchV2",
+  "inputs": {
+   "image_target": [
+    "902",
+    0
+   ],
+   "image_ref": [
+    "18",
+    0
+   ],
+   "method": "reinhard",
+   "strength": 0.5,
+   "multithread": true
+  },
+  "_meta": {
+   "title": "Z8 COLOUR MATCH W3 to cover (reinhard 0.5, per window)"
+  }
+ },
+ "1106": {
+  "class_type": "BatchImagesNode",
+  "inputs": {
+   "images.image0": [
+    "1103",
+    0
+   ],
+   "images.image1": [
+    "1104",
+    0
+   ],
+   "images.image2": [
+    "1105",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z8 COLOUR MATCH concat 727 frames"
+  }
+ },
+ "1107": {
+  "class_type": "CreateVideo",
+  "inputs": {
+   "fps": 24,
+   "bit_depth": "auto",
+   "color_space": "sRGB",
+   "codec": "auto",
+   "images": [
+    "1106",
+    0
+   ],
+   "audio": [
+    "920",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z8 COLOUR MATCH video + original mix"
+  }
+ },
+ "1108": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "filename_prefix": "genkwando/easy-v1/EASY-v1-30s-colourmatch",
+   "format": "auto",
+   "format.codec": "auto",
+   "codec": "auto",
+   "video": [
+    "1107",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Z8 OUTPUT (optional): genkwando/easy-v1/EASY-v1-30s-colourmatch"
+  }
+ }
+}

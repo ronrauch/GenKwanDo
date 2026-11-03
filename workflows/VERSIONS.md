@@ -4,6 +4,7 @@ Each version is a new saved Comfy Cloud record; older records are never overwrit
 
 | Version | Saved | File | What changed | Four-man band result |
 |---|---|---|---|---|
+| EASY v1 | 2026-11-03 01:59 PT | [genkwando-easy-v1.api.json](genkwando-easy-v1.api.json) | One image + one song in. Squaring, trim, Demucs stems, instrument naming and auto-written prompts all inside the graph; MASTER v4 render chain unchanged | Bassist p 0.055, drummer p 0.018, lips 0.531 (v4 0.484); brightness drift 49.4% (v4 39.7%), 25.7% after colour match. One cover tested; a second test was stopped by Cloud credits. |
 | v4 | 2026-10-30 13:32 PT | [genkwando-master-v4.api.json](genkwando-master-v4.api.json) | 4-step turbo LoRA alone, res_multistep + kl_optimal at 8 steps, calm prompts, seed 210664234423221 fixed on all three windows | Bassist and drummer lock to their stems. Trumpeter, lips and a slow brightness drift still need work. |
 | v3 | 2026-10-29 19:35 PT | [genkwando-master-v3.api.json](genkwando-master-v3.api.json) | Lip-motion LoRA + 8-step turbo LoRA, vocals and drums stems as references, counted prompts | Drummer locks; bassist off; a visible jump at the second window join. |
 
