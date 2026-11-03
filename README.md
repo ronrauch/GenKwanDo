@@ -6,7 +6,7 @@ GenKwanDo takes a cover image and a song. It finds who is in the picture, splits
 
 Built for the Open Source Higgsfield challenge by Ron Rauch.
 
-**[Watch the 99-second demo](examples/GenKwanDo-demo.mp4)**
+**[Watch the 2-minute ad](examples/GenKwanDo-ad-2min.mp4)** · [the 99-second demo](examples/GenKwanDo-demo.mp4)
 
 | Image in | 30 seconds out |
 |---|---|
@@ -24,6 +24,7 @@ Click a title; GitHub plays the video with its song.
 |---|---|---|
 | [Four-man band](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/band-30s.mp4) ([v4 raw](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/band-30s-v4.mp4), [bass comp](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/band-30s-comp.mp4)) | <img src="examples/genkwando-30s/cover-four-man-band.jpg" width="120"> | Singer, bassist, trumpeter and drummer, each on their own part |
 | [Six-piece band](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/six-piece-30s.mp4) | <img src="examples/genkwando-30s/cover-six-piece.jpg" width="120"> | Singer, pianist, guitarist, bassist, sax and drummer. Comfy Cloud splits the song into 4 stems, so guitar and piano share one leftover track; the sax is still loose |
+| [Seven-piece band](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/seven-piece-30s.mp4) | <img src="examples/genkwando-30s/cover-seven-piece.jpg" width="120"> | Singer, pianist, guitarist, bassist, sax, violinist and drummer. The drummer locks in the first 10 s and the violinist bows; the other players are still loose, and violin and sax share one stem |
 | [Garage rock](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/garage-rock-30s.mp4) | <img src="examples/genkwando-30s/cover-garage-rock.jpg" width="120"> | Singer, guitarist, bassist and drummer in a garage. The drummer locks to the drums stem; the guitarist locks in the first 10 s; the bassist is still loose |
 | [Porch guitarist](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/porch-30s.mp4) | <img src="examples/genkwando-30s/cover-porch-guitarist.jpg" width="120"> | Strumming hand and a slow, calm sway; the voice is off camera |
 | [Colour funk band](https://github.com/ronrauch/GenKwanDo/blob/main/examples/genkwando-30s/funk-band-30s.mp4) | <img src="examples/genkwando-30s/cover-colour-funk-band.jpg" width="120"> | Five players and dancers on stage |

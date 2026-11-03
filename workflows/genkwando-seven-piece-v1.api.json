@@ -1,0 +1,1003 @@
+{
+ "1": {
+  "class_type": "UNETLoader",
+  "inputs": {
+   "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+   "weight_dtype": "default"
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | UNET minimax_h3_ref2va int8"
+  }
+ },
+ "3": {
+  "class_type": "CLIPLoader",
+  "inputs": {
+   "clip_name": "qwen3vl_32b_minimax_h3_bf16.safetensors",
+   "type": "minimax",
+   "device": "default"
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | CLIP qwen3vl_32b bf16"
+  }
+ },
+ "4": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | video VAE fp16"
+  }
+ },
+ "5": {
+  "class_type": "VAELoader",
+  "inputs": {
+   "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | audio VAE fp32"
+  }
+ },
+ "6": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "9e3daca3dac99058990daa6ff444a46b21c55aed599fc9f719d74fb9a8a8d3f5.png"
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | INPUT cover (Z-Image seed 701, image 2 of 4)"
+  }
+ },
+ "7": {
+  "class_type": "LoadAudio",
+  "inputs": {
+   "audio": "d4c8c899a2a69b823be6c90122c25bce4994d2d9d8a16d0d9dd1422175f2a975.flac"
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | INPUT song mix (generated soul song, ACE-Step 1.5)"
+  }
+ },
+ "18": {
+  "class_type": "ImageResizeKJv2",
+  "inputs": {
+   "width": 1248,
+   "height": 1248,
+   "upscale_method": "lanczos",
+   "keep_proportion": "crop",
+   "pad_color": "0, 0, 0",
+   "crop_position": "center",
+   "divisible_by": 32,
+   "image": [
+    "15",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | crop+resize 1248x1248 /32"
+  }
+ },
+ "10": {
+  "class_type": "KSamplerSelect",
+  "inputs": {
+   "sampler_name": "res_multistep"
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | sampler res_multistep"
+  }
+ },
+ "11": {
+  "class_type": "BasicScheduler",
+  "inputs": {
+   "scheduler": "kl_optimal",
+   "steps": 8,
+   "denoise": 1,
+   "model": [
+    "20",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | scheduler kl_optimal 8 steps"
+  }
+ },
+ "710": {
+  "class_type": "LoadAudio",
+  "inputs": {
+   "audio": "a061d7ae2e3f88d7c0d0faa007a11ec329037de2f317161813ac9bb1966f6965.flac"
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | INPUT <Audio 1> vocals stem (htdemucs_6s)"
+  }
+ },
+ "720": {
+  "class_type": "LoadAudio",
+  "inputs": {
+   "audio": "943356ef99322bbf9a093ccf2494f3dd1aa11e1472332c182b8ace15c61d0950.flac"
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | INPUT <Audio 2> drums stem (htdemucs_6s)"
+  }
+ },
+ "110": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "710",
+    0
+   ],
+   "start_index": 0.0,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z4 SLICE W1: <Audio 1> 0.000-10.125s"
+  }
+ },
+ "111": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "720",
+    0
+   ],
+   "start_index": 0.0,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z4 SLICE W1: <Audio 2> 0.000-10.125s"
+  }
+ },
+ "120": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "7",
+    0
+   ],
+   "start_index": 0.0,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z4 SLICE W1: original mix 0.000-10.125s"
+  }
+ },
+ "101": {
+  "class_type": "MiniMaxH3ReferenceToVideo",
+  "inputs": {
+   "prompt": "subject_definitions:\n<Subject 1> is THE SINGER: in the exact centre, cream suit, big curly hair, both hands around the chrome microphone on its stand.\n<Subject 2> is THE PIANIST: at the far left, dark plum suit, seated at the black grand piano, hands on the keys.\n<Subject 3> is THE GUITARIST: left of centre, yellow vest and white shirt, fair hair, the sunburst hollow-body electric guitar.\n<Subject 4> is THE BASSIST: between the guitarist and the singer, brown shirt, curly hair, the sunburst four-string electric bass.\n<Subject 5> is THE SAXOPHONIST: right of centre, brown suit, the gold tenor saxophone at his lips.\n<Subject 6> is THE VIOLINIST: right of the saxophonist, green dress, long brown hair, the wooden violin under her chin and the bow in her right hand.\n<Subject 7> is THE DRUMMER: at the far right, grey-green shirt, seated behind the red drum kit.\n<Subject 8> is THE WORLD: five stage lamps on the overhead truss throwing cones of warm light, red curtains at either side, a teal curtain backdrop, a wooden stage floor, monitor speakers at the lower corners.\n<Picture 1> is the cover and the first frame of this window.\n\nsummary:\nWARM SOUL. The target video is one continuous locked-off shot, a seven-piece band under five stage lamps, in a warm painted gouache illustration of a 1960s soul club stage, window 1 of 3 of a 30 second performance. <Audio 1> is the singer's voice, <Audio 2> is the drums, <Audio 3> is the violin and tenor saxophone phrases, the high bowed notes for the violinist and the low breathy notes for the saxophonist; with the full song they drive every movement, every bit of audio in order. The violin and the tenor saxophone take turns, one phrase at a time. A warm, joyful, restrained performance: heads calm, shoulders still, each player's motion in the hands on his or her own instrument on its counted notes; the world moves gently and slowly with the music while the light and colours stay as on the cover. Locked-off camera, one continuous take.\n\nretention_analysis:\nEvery person keeps the same face, hair, clothes, instrument and spot from the first frame to the last; every object keeps its shape and place; the bass keeps four straight thin sharp strings, the guitar keeps six straight thin sharp strings, the violin keeps four strings and one straight bow, the saxophone keeps its row of pearl keys; the lighting, brightness and colours of the cover hold steady from the first frame to the last: warm amber light cones on a teal backdrop between red curtains; the palette and the art style stay exactly as on the cover, a warm painted gouache illustration of a 1960s soul club stage. The camera stays locked at one framing with all seven people fully in frame, one continuous take from the first frame to the last; every body holds its spot and posture, heads calm, shoulders still.\n\ndetailed_description:\nThe target video is a warm painted gouache illustration of a 1960s soul club stage, a locked-off camera. Laws of this world: the camera holds one locked framing for the whole window, everyone fully in frame; everything on the cover is alive and moving, slow and subtle between the notes: the five stage lamps glow and pulse slowly; the cones of light brighten and soften; the red curtains sway slowly; the teal backdrop ripples slowly and softly; the cymbals shimmer softly; the strings vibrate; hands have five fingers resting on real instruments; each performer's motion stays in the hands on the instrument, each with a small distinct touch; every person holds a calm, steady posture, heads calm, shoulders still, breathing and blinking softly.\nTHE SINGER waits through this instrumental window: lips resting together in a soft smile, both hands on the microphone, swaying gently with the groove, eyes on the band. Everyone else keeps lips together, the saxophonist's lips resting on the mouthpiece.\nTHE DRUMMER: on each drum hit (20 in this window from 1.28 s) a stick lands on the snare or his foot presses the kick pedal; on every first beat his right stick taps the cymbal; head calm, his motion in his hands and foot.\nTHE BASSIST: on each bass note (13 in this window from 1.88 s) his right index and middle fingers pluck one of the four thick strings over the pickups, a single clean pluck per note, while his left fingers press that string on the neck and slide to the next fret as the note changes; the four strings stay straight, thin and sharp; feet planted, head calm, shoulders still.\nTHE GUITARIST: on each comping chord (5 in this window from 1.87 s) his right hand strums down once across the six strings, left fingers holding the chord on the neck; head calm, shoulders still.\nTHE PIANIST: his chords come forward from 3.5 to 4.0 s, 7.5 to 8.5 s; on each chord (5 comping hits in this window from 1.87 s) his hands press the keys together and lift a little; seated still on the bench, head calm.\nTHE SAXOPHONIST plays his answering phrases from 2.0 to 3.0 s, 4.0 to 7.5 s, 8.5 to 9.5 s: his cheeks puff out round and full on each note, his left-hand fingers on the upper pearl keys and his right-hand fingers on the lower pearl keys press down and lift as each note changes, the mouthpiece between his lips, the horn lifting slightly on long notes. In the rest of the window he holds the horn steady at his chest with his cheeks relaxed and his fingers resting on the keys.\nTHE VIOLINIST plays her solo phrases from 0.0 to 2.0 s, 3.0 to 3.5 s, 9.5 to 10.1 s: the bow in her right hand draws in long smooth strokes across the strings between the bridge and the fingerboard, one bow stroke per phrase note, her left fingers pressing the strings on the neck and rocking in a gentle vibrato on held notes; the violin stays tucked under her chin. In the rest of the window she holds the violin under her chin with the bow resting just above the strings, listening.\nThe world answers the music: on each drum hit the five lamps brighten a little and settle; with the bass notes the curtains sway slowly; with the violin and saxophone phrases the cones of light glow a little warmer.\nThe window opens instrumental: the violin and the saxophone trade phrases, one at a time, the light and colours steady as on the cover.\n\noverall_soundscape:\na warm 1960s soul club, glasses clinking, a happy crowd.\n\nnon_diegetic_music:\na warm soul jazz groove, 100 bpm. The drums steady, 20 hits. The electric bass, 13 notes. The guitar and piano comping, 5 chords. The violin phrases 0.0 to 2.0 s, 3.0 to 3.5 s, 9.5 to 10.1 s. The tenor sax phrases 2.0 to 3.0 s, 4.0 to 7.5 s, 8.5 to 9.5 s. The voice rests.",
+   "width": 1248,
+   "height": 1248,
+   "length": 243,
+   "ref_image_size": "match",
+   "ref_images.ref_image_0": [
+    "18",
+    0
+   ],
+   "ref_audios.ref_audio_0": [
+    "110",
+    0
+   ],
+   "ref_audios.ref_audio_1": [
+    "111",
+    0
+   ],
+   "clip": [
+    "3",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "audio_vae": [
+    "5",
+    0
+   ],
+   "ref_audios.ref_audio_2": [
+    "112",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W1: ref2va 1248x1248 x243f, 2 stem refs, cover = identity anchor"
+  }
+ },
+ "102": {
+  "class_type": "MiniMaxH3AddGuide",
+  "inputs": {
+   "frame_idx": 0,
+   "positive": [
+    "101",
+    0
+   ],
+   "latent": [
+    "101",
+    1
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "audio_vae": [
+    "5",
+    0
+   ],
+   "image": [
+    "18",
+    0
+   ],
+   "audio": [
+    "110",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W1: AddGuide frame 0 = cover, audio = <Audio 1> slice"
+  }
+ },
+ "103": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 210664234423223
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W1: seed 210664234423223"
+  }
+ },
+ "104": {
+  "class_type": "BasicGuider",
+  "inputs": {
+   "model": [
+    "20",
+    0
+   ],
+   "conditioning": [
+    "102",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W1: guider"
+  }
+ },
+ "105": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "103",
+    0
+   ],
+   "guider": [
+    "104",
+    0
+   ],
+   "sampler": [
+    "10",
+    0
+   ],
+   "sigmas": [
+    "11",
+    0
+   ],
+   "latent_image": [
+    "101",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W1: sampler"
+  }
+ },
+ "106": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "105",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W1: decode"
+  }
+ },
+ "109": {
+  "class_type": "GetImageRangeFromBatch",
+  "inputs": {
+   "start_index": 242,
+   "num_frames": 1,
+   "images": [
+    "106",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W1: last frame (242) = next window guide"
+  }
+ },
+ "107": {
+  "class_type": "CreateVideo",
+  "inputs": {
+   "fps": 24,
+   "bit_depth": "auto",
+   "color_space": "sRGB",
+   "codec": "auto",
+   "images": [
+    "106",
+    0
+   ],
+   "audio": [
+    "120",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z7 ASSEMBLE W1: own video 24fps + original mix slice"
+  }
+ },
+ "108": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "filename_prefix": "genkwando/seven/SEVEN-C-30s-w1",
+   "format": "auto",
+   "format.codec": "auto",
+   "codec": "auto",
+   "video": [
+    "107",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z7 OUTPUT W1: genkwando/seven/SEVEN-C-30s-w1"
+  }
+ },
+ "210": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "710",
+    0
+   ],
+   "start_index": 10.125,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z4 SLICE W2: <Audio 1> 10.125-20.250s"
+  }
+ },
+ "211": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "720",
+    0
+   ],
+   "start_index": 10.125,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z4 SLICE W2: <Audio 2> 10.125-20.250s"
+  }
+ },
+ "220": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "7",
+    0
+   ],
+   "start_index": 10.125,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z4 SLICE W2: original mix 10.125-20.250s"
+  }
+ },
+ "201": {
+  "class_type": "MiniMaxH3ReferenceToVideo",
+  "inputs": {
+   "prompt": "subject_definitions:\n<Subject 1> is THE SINGER: in the exact centre, cream suit, big curly hair, both hands around the chrome microphone on its stand.\n<Subject 2> is THE PIANIST: at the far left, dark plum suit, seated at the black grand piano, hands on the keys.\n<Subject 3> is THE GUITARIST: left of centre, yellow vest and white shirt, fair hair, the sunburst hollow-body electric guitar.\n<Subject 4> is THE BASSIST: between the guitarist and the singer, brown shirt, curly hair, the sunburst four-string electric bass.\n<Subject 5> is THE SAXOPHONIST: right of centre, brown suit, the gold tenor saxophone at his lips.\n<Subject 6> is THE VIOLINIST: right of the saxophonist, green dress, long brown hair, the wooden violin under her chin and the bow in her right hand.\n<Subject 7> is THE DRUMMER: at the far right, grey-green shirt, seated behind the red drum kit.\n<Subject 8> is THE WORLD: five stage lamps on the overhead truss throwing cones of warm light, red curtains at either side, a teal curtain backdrop, a wooden stage floor, monitor speakers at the lower corners.\n<Picture 1> is the cover and the first frame of this window.\n\nsummary:\nWARM SOUL. The target video is one continuous locked-off shot, a seven-piece band under five stage lamps, in a warm painted gouache illustration of a 1960s soul club stage, window 2 of 3 of a 30 second performance. <Audio 1> is the singer's voice, <Audio 2> is the drums, <Audio 3> is the violin and tenor saxophone phrases, the high bowed notes for the violinist and the low breathy notes for the saxophonist; with the full song they drive every movement, every bit of audio in order. The violin and the tenor saxophone take turns, one phrase at a time. A warm, joyful, restrained performance: heads calm, shoulders still, each player's motion in the hands on his or her own instrument on its counted notes; the world moves gently and slowly with the music while the light and colours stay as on the cover. Locked-off camera, one continuous take.\n\nretention_analysis:\nEvery person keeps the same face, hair, clothes, instrument and spot from the first frame to the last; every object keeps its shape and place; the bass keeps four straight thin sharp strings, the guitar keeps six straight thin sharp strings, the violin keeps four strings and one straight bow, the saxophone keeps its row of pearl keys; the lighting, brightness and colours of the cover hold steady from the first frame to the last: warm amber light cones on a teal backdrop between red curtains; the palette and the art style stay exactly as on the cover, a warm painted gouache illustration of a 1960s soul club stage. The camera stays locked at one framing with all seven people fully in frame, one continuous take from the first frame to the last; every body holds its spot and posture, heads calm, shoulders still.\n\ndetailed_description:\nThe target video is a warm painted gouache illustration of a 1960s soul club stage, a locked-off camera. Laws of this world: the camera holds one locked framing for the whole window, everyone fully in frame; everything on the cover is alive and moving, slow and subtle between the notes: the five stage lamps glow and pulse slowly; the cones of light brighten and soften; the red curtains sway slowly; the teal backdrop ripples slowly and softly; the cymbals shimmer softly; the strings vibrate; hands have five fingers resting on real instruments; each performer's motion stays in the hands on the instrument, each with a small distinct touch; every person holds a calm, steady posture, heads calm, shoulders still, breathing and blinking softly.\nTHE SINGER is the one singer and sings <Audio 1> from 7.5 to 10.1 s: lips on each sung syllable (2 in this window), lips and jaw shaping each word, mouth opening moderately, both hands staying on the microphone, his head drifting slowly in small turns on held notes, shoulders still; before his first line and between lines his lips rest together in a soft smile. Everyone else keeps lips together, the saxophonist's lips resting on the mouthpiece.\nTHE DRUMMER: on each drum hit (20 in this window from 0.15 s) a stick lands on the snare or his foot presses the kick pedal; on every first beat his right stick taps the cymbal; head calm, his motion in his hands and foot.\nTHE BASSIST: on each bass note (14 in this window from 0.16 s) his right index and middle fingers pluck one of the four thick strings over the pickups, a single clean pluck per note, while his left fingers press that string on the neck and slide to the next fret as the note changes; the four strings stay straight, thin and sharp; feet planted, head calm, shoulders still.\nTHE GUITARIST: on each comping chord (8 in this window from 0.15 s) his right hand strums down once across the six strings, left fingers holding the chord on the neck; head calm, shoulders still.\nTHE PIANIST: on each chord (8 comping hits in this window from 0.15 s) his hands press the keys together and lift a little; seated still on the bench, head calm.\nTHE SAXOPHONIST plays his answering phrases from 5.9 to 8.9 s: his cheeks puff out round and full on each note, his left-hand fingers on the upper pearl keys and his right-hand fingers on the lower pearl keys press down and lift as each note changes, the mouthpiece between his lips, the horn lifting slightly on long notes. In the rest of the window he holds the horn steady at his chest with his cheeks relaxed and his fingers resting on the keys.\nTHE VIOLINIST plays her solo phrases from 0.0 to 5.9 s: the bow in her right hand draws in long smooth strokes across the strings between the bridge and the fingerboard, one bow stroke per phrase note, her left fingers pressing the strings on the neck and rocking in a gentle vibrato on held notes; the violin stays tucked under her chin. In the rest of the window she holds the violin under her chin with the bow resting just above the strings, listening.\nThe world answers the music: on each drum hit the five lamps brighten a little and settle; with the bass notes the curtains sway slowly; with the violin and saxophone phrases the cones of light glow a little warmer.\nThe violin carries a long solo, the saxophone answers, then the singer comes in; the light and colours steady as on the cover.\n\noverall_soundscape:\na warm 1960s soul club, glasses clinking, a happy crowd.\n\nnon_diegetic_music:\na warm soul jazz groove, 100 bpm. The drums steady, 20 hits. The electric bass, 14 notes. The guitar and piano comping, 8 chords. The violin phrases 0.0 to 5.9 s. The tenor sax phrases 5.9 to 8.9 s. The voice sings 2 syllables from 7.5 to 10.1 s.",
+   "width": 1248,
+   "height": 1248,
+   "length": 243,
+   "ref_image_size": "match",
+   "ref_images.ref_image_0": [
+    "18",
+    0
+   ],
+   "ref_audios.ref_audio_0": [
+    "210",
+    0
+   ],
+   "ref_audios.ref_audio_1": [
+    "211",
+    0
+   ],
+   "clip": [
+    "3",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "audio_vae": [
+    "5",
+    0
+   ],
+   "ref_audios.ref_audio_2": [
+    "212",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W2: ref2va 1248x1248 x243f, 2 stem refs, cover = identity anchor"
+  }
+ },
+ "202": {
+  "class_type": "MiniMaxH3AddGuide",
+  "inputs": {
+   "frame_idx": 0,
+   "positive": [
+    "201",
+    0
+   ],
+   "latent": [
+    "201",
+    1
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "audio_vae": [
+    "5",
+    0
+   ],
+   "image": [
+    "109",
+    0
+   ],
+   "audio": [
+    "210",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W2: AddGuide frame 0 = W1 last decoded frame (join), audio = <Au"
+  }
+ },
+ "203": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 210664234423223
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W2: seed 210664234423223"
+  }
+ },
+ "204": {
+  "class_type": "BasicGuider",
+  "inputs": {
+   "model": [
+    "20",
+    0
+   ],
+   "conditioning": [
+    "202",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W2: guider"
+  }
+ },
+ "205": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "203",
+    0
+   ],
+   "guider": [
+    "204",
+    0
+   ],
+   "sampler": [
+    "10",
+    0
+   ],
+   "sigmas": [
+    "11",
+    0
+   ],
+   "latent_image": [
+    "201",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W2: sampler"
+  }
+ },
+ "206": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "205",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W2: decode"
+  }
+ },
+ "209": {
+  "class_type": "GetImageRangeFromBatch",
+  "inputs": {
+   "start_index": 242,
+   "num_frames": 1,
+   "images": [
+    "206",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W2: last frame (242) = next window guide"
+  }
+ },
+ "207": {
+  "class_type": "CreateVideo",
+  "inputs": {
+   "fps": 24,
+   "bit_depth": "auto",
+   "color_space": "sRGB",
+   "codec": "auto",
+   "images": [
+    "206",
+    0
+   ],
+   "audio": [
+    "220",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z7 ASSEMBLE W2: own video 24fps + original mix slice"
+  }
+ },
+ "208": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "filename_prefix": "genkwando/seven/SEVEN-C-30s-w2",
+   "format": "auto",
+   "format.codec": "auto",
+   "codec": "auto",
+   "video": [
+    "207",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z7 OUTPUT W2: genkwando/seven/SEVEN-C-30s-w2"
+  }
+ },
+ "310": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "710",
+    0
+   ],
+   "start_index": 20.25,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z4 SLICE W3: <Audio 1> 20.250-30.375s"
+  }
+ },
+ "311": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "720",
+    0
+   ],
+   "start_index": 20.25,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z4 SLICE W3: <Audio 2> 20.250-30.375s"
+  }
+ },
+ "320": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "7",
+    0
+   ],
+   "start_index": 20.25,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z4 SLICE W3: original mix 20.250-30.375s"
+  }
+ },
+ "301": {
+  "class_type": "MiniMaxH3ReferenceToVideo",
+  "inputs": {
+   "prompt": "subject_definitions:\n<Subject 1> is THE SINGER: in the exact centre, cream suit, big curly hair, both hands around the chrome microphone on its stand.\n<Subject 2> is THE PIANIST: at the far left, dark plum suit, seated at the black grand piano, hands on the keys.\n<Subject 3> is THE GUITARIST: left of centre, yellow vest and white shirt, fair hair, the sunburst hollow-body electric guitar.\n<Subject 4> is THE BASSIST: between the guitarist and the singer, brown shirt, curly hair, the sunburst four-string electric bass.\n<Subject 5> is THE SAXOPHONIST: right of centre, brown suit, the gold tenor saxophone at his lips.\n<Subject 6> is THE VIOLINIST: right of the saxophonist, green dress, long brown hair, the wooden violin under her chin and the bow in her right hand.\n<Subject 7> is THE DRUMMER: at the far right, grey-green shirt, seated behind the red drum kit.\n<Subject 8> is THE WORLD: five stage lamps on the overhead truss throwing cones of warm light, red curtains at either side, a teal curtain backdrop, a wooden stage floor, monitor speakers at the lower corners.\n<Picture 1> is the cover and the first frame of this window.\n\nsummary:\nWARM SOUL. The target video is one continuous locked-off shot, a seven-piece band under five stage lamps, in a warm painted gouache illustration of a 1960s soul club stage, window 3 of 3 of a 30 second performance. <Audio 1> is the singer's voice, <Audio 2> is the drums, <Audio 3> is the violin and tenor saxophone phrases, the high bowed notes for the violinist and the low breathy notes for the saxophonist; with the full song they drive every movement, every bit of audio in order. The violin and the tenor saxophone take turns, one phrase at a time. A warm, joyful, restrained performance: heads calm, shoulders still, each player's motion in the hands on his or her own instrument on its counted notes; the world moves gently and slowly with the music while the light and colours stay as on the cover. Locked-off camera, one continuous take.\n\nretention_analysis:\nEvery person keeps the same face, hair, clothes, instrument and spot from the first frame to the last; every object keeps its shape and place; the bass keeps four straight thin sharp strings, the guitar keeps six straight thin sharp strings, the violin keeps four strings and one straight bow, the saxophone keeps its row of pearl keys; the lighting, brightness and colours of the cover hold steady from the first frame to the last: warm amber light cones on a teal backdrop between red curtains; the palette and the art style stay exactly as on the cover, a warm painted gouache illustration of a 1960s soul club stage. The camera stays locked at one framing with all seven people fully in frame, one continuous take from the first frame to the last; every body holds its spot and posture, heads calm, shoulders still.\n\ndetailed_description:\nThe target video is a warm painted gouache illustration of a 1960s soul club stage, a locked-off camera. Laws of this world: the camera holds one locked framing for the whole window, everyone fully in frame; everything on the cover is alive and moving, slow and subtle between the notes: the five stage lamps glow and pulse slowly; the cones of light brighten and soften; the red curtains sway slowly; the teal backdrop ripples slowly and softly; the cymbals shimmer softly; the strings vibrate; hands have five fingers resting on real instruments; each performer's motion stays in the hands on the instrument, each with a small distinct touch; every person holds a calm, steady posture, heads calm, shoulders still, breathing and blinking softly.\nTHE SINGER is the one singer and sings <Audio 1> from 0.0 to 10.0 s: lips on each sung syllable (12 in this window), lips and jaw shaping each word, mouth opening moderately, both hands staying on the microphone, his head drifting slowly in small turns on held notes, shoulders still; before his first line and between lines his lips rest together in a soft smile. Everyone else keeps lips together, the saxophonist's lips resting on the mouthpiece.\nTHE DRUMMER: on each drum hit (23 in this window from 0.23 s) a stick lands on the snare or his foot presses the kick pedal; on every first beat his right stick taps the cymbal; head calm, his motion in his hands and foot.\nTHE BASSIST: on each bass note (16 in this window from 0.82 s) his right index and middle fingers pluck one of the four thick strings over the pickups, a single clean pluck per note, while his left fingers press that string on the neck and slide to the next fret as the note changes; the four strings stay straight, thin and sharp; feet planted, head calm, shoulders still.\nTHE GUITARIST: on each comping chord (5 in this window from 0.23 s) his right hand strums down once across the six strings, left fingers holding the chord on the neck, strumming fuller from 5.8 to 6.8 s; head calm, shoulders still.\nTHE PIANIST: his chords come forward from 0.8 to 3.8 s; on each chord (5 comping hits in this window from 0.23 s) his hands press the keys together and lift a little; seated still on the bench, head calm.\nTHE SAXOPHONIST plays his answering phrases from 6.8 to 8.2 s: his cheeks puff out round and full on each note, his left-hand fingers on the upper pearl keys and his right-hand fingers on the lower pearl keys press down and lift as each note changes, the mouthpiece between his lips, the horn lifting slightly on long notes. In the rest of the window he holds the horn steady at his chest with his cheeks relaxed and his fingers resting on the keys.\nTHE VIOLINIST plays her solo phrases from 5.2 to 5.8 s: the bow in her right hand draws in long smooth strokes across the strings between the bridge and the fingerboard, one bow stroke per phrase note, her left fingers pressing the strings on the neck and rocking in a gentle vibrato on held notes; the violin stays tucked under her chin. In the rest of the window she holds the violin under her chin with the bow resting just above the strings, listening.\nThe world answers the music: on each drum hit the five lamps brighten a little and settle; with the bass notes the curtains sway slowly; with the violin and saxophone phrases the cones of light glow a little warmer.\nThe finale: the singer leads, the piano, violin, guitar and saxophone each take a short turn, then everyone eases into the last notes, the light and colours as on the cover.\n\noverall_soundscape:\na warm 1960s soul club, glasses clinking, a happy crowd.\n\nnon_diegetic_music:\na warm soul jazz groove, 100 bpm. The drums steady, 23 hits. The electric bass, 16 notes. The guitar and piano comping, 5 chords. The violin phrases 5.2 to 5.8 s. The tenor sax phrases 6.8 to 8.2 s. The voice sings 12 syllables from 0.0 to 10.0 s.",
+   "width": 1248,
+   "height": 1248,
+   "length": 243,
+   "ref_image_size": "match",
+   "ref_images.ref_image_0": [
+    "18",
+    0
+   ],
+   "ref_audios.ref_audio_0": [
+    "310",
+    0
+   ],
+   "ref_audios.ref_audio_1": [
+    "311",
+    0
+   ],
+   "clip": [
+    "3",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "audio_vae": [
+    "5",
+    0
+   ],
+   "ref_audios.ref_audio_2": [
+    "312",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W3: ref2va 1248x1248 x243f, 2 stem refs, cover = identity anchor"
+  }
+ },
+ "302": {
+  "class_type": "MiniMaxH3AddGuide",
+  "inputs": {
+   "frame_idx": 0,
+   "positive": [
+    "301",
+    0
+   ],
+   "latent": [
+    "301",
+    1
+   ],
+   "vae": [
+    "4",
+    0
+   ],
+   "audio_vae": [
+    "5",
+    0
+   ],
+   "image": [
+    "209",
+    0
+   ],
+   "audio": [
+    "310",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W3: AddGuide frame 0 = W2 last decoded frame (join), audio = <Au"
+  }
+ },
+ "303": {
+  "class_type": "RandomNoise",
+  "inputs": {
+   "noise_seed": 210664234423223
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W3: seed 210664234423223"
+  }
+ },
+ "304": {
+  "class_type": "BasicGuider",
+  "inputs": {
+   "model": [
+    "20",
+    0
+   ],
+   "conditioning": [
+    "302",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W3: guider"
+  }
+ },
+ "305": {
+  "class_type": "SamplerCustomAdvanced",
+  "inputs": {
+   "noise": [
+    "303",
+    0
+   ],
+   "guider": [
+    "304",
+    0
+   ],
+   "sampler": [
+    "10",
+    0
+   ],
+   "sigmas": [
+    "11",
+    0
+   ],
+   "latent_image": [
+    "301",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W3: sampler"
+  }
+ },
+ "306": {
+  "class_type": "VAEDecode",
+  "inputs": {
+   "samples": [
+    "305",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z5 H3 W3: decode"
+  }
+ },
+ "307": {
+  "class_type": "CreateVideo",
+  "inputs": {
+   "fps": 24,
+   "bit_depth": "auto",
+   "color_space": "sRGB",
+   "codec": "auto",
+   "images": [
+    "306",
+    0
+   ],
+   "audio": [
+    "320",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z7 ASSEMBLE W3: own video 24fps + original mix slice"
+  }
+ },
+ "308": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "filename_prefix": "genkwando/seven/SEVEN-C-30s-w3",
+   "format": "auto",
+   "format.codec": "auto",
+   "codec": "auto",
+   "video": [
+    "307",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z7 OUTPUT W3: genkwando/seven/SEVEN-C-30s-w3"
+  }
+ },
+ "901": {
+  "class_type": "GetImageRangeFromBatch",
+  "inputs": {
+   "start_index": 1,
+   "num_frames": 242,
+   "images": [
+    "206",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z7 ASSEMBLE: W2 drop first guide frame (1..242)"
+  }
+ },
+ "902": {
+  "class_type": "GetImageRangeFromBatch",
+  "inputs": {
+   "start_index": 1,
+   "num_frames": 242,
+   "images": [
+    "306",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z7 ASSEMBLE: W3 drop first guide frame (1..242)"
+  }
+ },
+ "910": {
+  "class_type": "BatchImagesNode",
+  "inputs": {
+   "images.image0": [
+    "106",
+    0
+   ],
+   "images.image1": [
+    "901",
+    0
+   ],
+   "images.image2": [
+    "902",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z7 ASSEMBLE: concat 3 windows = 727 frames"
+  }
+ },
+ "920": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "7",
+    0
+   ],
+   "start_index": 0.0,
+   "duration": 30.291666666666668
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z4 SLICE: original mix 0.000-30.292s (727 frames)"
+  }
+ },
+ "921": {
+  "class_type": "CreateVideo",
+  "inputs": {
+   "fps": 24,
+   "bit_depth": "auto",
+   "color_space": "sRGB",
+   "codec": "auto",
+   "images": [
+    "910",
+    0
+   ],
+   "audio": [
+    "920",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z7 ASSEMBLE: 727 frames @24fps + original mix"
+  }
+ },
+ "922": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "filename_prefix": "genkwando/seven/SEVEN-C-30s",
+   "format": "auto",
+   "format.codec": "auto",
+   "codec": "auto",
+   "video": [
+    "921",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z7 OUTPUT: genkwando/seven/SEVEN-C-30s"
+  }
+ },
+ "20": {
+  "class_type": "LoraLoaderModelOnly",
+  "inputs": {
+   "lora_name": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+   "strength_model": 1,
+   "model": [
+    "1",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | LoRA turbo_4step_v0.1 (JIM2)"
+  }
+ },
+ "15": {
+  "class_type": "ImageCrop",
+  "inputs": {
+   "image": [
+    "6",
+    0
+   ],
+   "width": 1140,
+   "height": 1140,
+   "x": 54,
+   "y": 0
+  },
+  "_meta": {
+   "title": "crop cover (drop bottom-edge marks)"
+  }
+ },
+ "19": {
+  "class_type": "SaveImage",
+  "inputs": {
+   "images": [
+    "18",
+    0
+   ],
+   "filename_prefix": "genkwando/seven/cover7-final"
+  },
+  "_meta": {
+   "title": "save final cover"
+  }
+ },
+ "730": {
+  "class_type": "LoadAudio",
+  "inputs": {
+   "audio": "b5c30532161f8d83821e4269ad2fbcb17215acce48e9f8379a967939e9ba728f.flac"
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | INPUT <Audio 3> other stem = violin and sax turns (htdemucs_6s)"
+  }
+ },
+ "112": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "730",
+    0
+   ],
+   "start_index": 0.0,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z4 SLICE W1: <Audio 3> 0.000s"
+  }
+ },
+ "212": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "730",
+    0
+   ],
+   "start_index": 10.125,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z4 SLICE W2: <Audio 3> 10.125s"
+  }
+ },
+ "312": {
+  "class_type": "TrimAudioDuration",
+  "inputs": {
+   "audio": [
+    "730",
+    0
+   ],
+   "start_index": 20.25,
+   "duration": 10.125
+  },
+  "_meta": {
+   "title": "SEVEN-PIECE v1 | Z4 SLICE W3: <Audio 3> 20.250s"
+  }
+ }
+}
